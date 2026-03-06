@@ -13,7 +13,10 @@ import os
 try:
     API_BASE = st.secrets["API_URL"]
 except Exception:
-    API_BASE = os.getenv("API_URL", "http://127.0.0.1:8000")
+        API_BASE = os.getenv(
+        "API_URL",
+        "https://ai-agency-automation.onrender.com"
+    )
 
 API = f"{API_BASE}/lead"
 
@@ -22,12 +25,20 @@ API = f"{API_BASE}/lead"
 def check_backend():
     """Check if backend API is available with timeout handling"""
     try:
-        start = time.time()
-        response = requests.get(f"{API_BASE}/health", timeout=5)
+        
+       
+        try:
+            response = requests.get(f"{API_BASE}/health", timeout=5)
+        except Exception:
+            response = requests.get(API_BASE, timeout=5)
+
         latency = round((time.time() - start) * 1000, 2)
-        if response.status_code == 200:
+
+        if response.status_code in [200, 404]:
             return True, latency
+
         return False, "N/A"
+
     except Exception:
         return False, "N/A"
 
@@ -38,7 +49,7 @@ def fallback_lead_scoring(payload):
     urgency = payload.get("urgency", 1)
     ai_interest = payload.get("ai_interest", 0)
 
-    # Simple scoring algorithm
+    
     budget_score = min(budget / 200, 40)
     size_score = min(company_size / 5, 20)
     urgency_score = urgency * 8
@@ -140,7 +151,7 @@ st.markdown("### 🔮 AI System Status")
 
 c1, c2, c3, c4 = st.columns(4)
 
-# Backend status check using new function
+
 backend_online, latency = check_backend()
 backend_status = "Running" if backend_online else "Offline"
 
@@ -153,7 +164,7 @@ c2.metric("RAG Knowledge Documents", rag_docs)
 c3.metric("Workflow Agents Active", active_agents)
 c4.metric("Backend API Latency (ms)", latency)
 
-# Status indicator bar
+
 status_col1, status_col2, status_col3 = st.columns(3)
 with status_col1:
     if backend_online:
@@ -247,7 +258,7 @@ if st.button("⚡ Analyze Lead"):
         "ai_interest": ai_interest
     }
 
-    # Use API with fallback
+    
     with st.spinner("🔄 Analyzing lead with AI..."):
         data, mode = analyze_lead_api(payload)
 
@@ -704,3 +715,4 @@ st.markdown(f"""
     <p style='font-size: 0.7rem; color: #888;'>API: {API_BASE} | Mode: {"🟢 Online" if backend_online else "🟡 Local"}</p>
 </div>
 """, unsafe_allow_html=True)
+
