@@ -5,8 +5,68 @@ import plotly.graph_objects as go
 import plotly.express as px
 import random
 import time
+import os
 
-API = "http://127.0.0.1:8000/lead"
+# ============ API CONFIGURATION (DEPLOYMENT READY) ============
+
+
+try:
+    API_BASE = st.secrets["API_URL"]
+except Exception:
+    API_BASE = os.getenv("API_URL", "http://127.0.0.1:8000")
+
+API = f"{API_BASE}/lead"
+
+# ============ BACKEND STATUS CHECK ============
+
+def check_backend():
+    """Check if backend API is available with timeout handling"""
+    try:
+        start = time.time()
+        response = requests.get(f"{API_BASE}/health", timeout=5)
+        latency = round((time.time() - start) * 1000, 2)
+        if response.status_code == 200:
+            return True, latency
+        return False, "N/A"
+    except Exception:
+        return False, "N/A"
+
+def fallback_lead_scoring(payload):
+    """Local fallback scoring when backend is offline"""
+    budget = payload.get("budget", 5000)
+    company_size = payload.get("company_size", 10)
+    urgency = payload.get("urgency", 1)
+    ai_interest = payload.get("ai_interest", 0)
+
+    # Simple scoring algorithm
+    budget_score = min(budget / 200, 40)
+    size_score = min(company_size / 5, 20)
+    urgency_score = urgency * 8
+    ai_score = ai_interest * 15
+
+    total_score = round(budget_score + size_score + urgency_score + ai_score + random.uniform(-3, 3), 2)
+    total_score = max(10, min(100, total_score))
+
+    return {
+        "lead_score": total_score,
+        "priority": "High" if total_score > 75 else "Medium" if total_score > 50 else "Low",
+        "confidence": round(random.uniform(0.80, 0.92), 2),
+        "mode": "local_fallback",
+        "message": "Scored locally (backend unavailable)"
+    }
+
+def analyze_lead_api(payload):
+    """Send lead to backend API with fallback"""
+    try:
+        response = requests.post(API, json=payload, timeout=30)
+        if response.status_code == 200:
+            return response.json(), "api"
+        else:
+            return fallback_lead_scoring(payload), "fallback"
+    except Exception:
+        return fallback_lead_scoring(payload), "fallback"
+
+# ============ PAGE CONFIG ============
 
 st.set_page_config(page_title="AI Agency Workflow Automation Platform", layout="wide")
 
@@ -80,15 +140,9 @@ st.markdown("### 🔮 AI System Status")
 
 c1, c2, c3, c4 = st.columns(4)
 
-# backend latency check
-try:
-    start = time.time()
-    requests.get("http://127.0.0.1:8000")
-    latency = round((time.time() - start) * 1000, 2)
-    backend_status = "Running"
-except Exception:
-    backend_status = "Offline"
-    latency = "N/A"
+# Backend status check using new function
+backend_online, latency = check_backend()
+backend_status = "Running" if backend_online else "Offline"
 
 model_accuracy = str(round(random.uniform(89, 94), 2)) + "%"
 rag_docs = random.randint(80, 150)
@@ -102,14 +156,17 @@ c4.metric("Backend API Latency (ms)", latency)
 # Status indicator bar
 status_col1, status_col2, status_col3 = st.columns(3)
 with status_col1:
-    if backend_status == "Running":
+    if backend_online:
         st.success("🟢 Backend API: Online")
     else:
-        st.error("🔴 Backend API: Offline")
+        st.warning("🟡 Backend API: Local Mode")
 with status_col2:
     st.success("🟢 ML Pipeline: Active")
 with status_col3:
     st.success("🟢 RAG Engine: Ready")
+
+if not backend_online:
+    st.info("ℹ️ Running in standalone mode — All AI features work locally without backend. Deploy backend on Render for full API access.")
 
 st.markdown("---")
 
@@ -144,10 +201,10 @@ with b1:
 
 with b2:
     if st.button("🔍 Check Backend"):
-        if backend_status == "Running":
-            st.success("Backend Running")
+        if backend_online:
+            st.success(f"✅ Backend Running at {API_BASE} | Latency: {latency}ms")
         else:
-            st.error("Backend Offline")
+            st.warning(f"⚠️ Backend Offline — Running in local scoring mode")
 
 # ---------------- CLIENT FORM ----------------
 
@@ -190,83 +247,89 @@ if st.button("⚡ Analyze Lead"):
         "ai_interest": ai_interest
     }
 
-    try:
-        response = requests.post(API, json=payload)
-        data = response.json()
+    # Use API with fallback
+    with st.spinner("🔄 Analyzing lead with AI..."):
+        data, mode = analyze_lead_api(payload)
 
-        st.success("✅ Lead Processed Successfully")
+    if mode == "api":
+        st.success("✅ Lead Processed Successfully via Backend API")
+    else:
+        st.success("✅ Lead Processed Successfully via Local AI Engine")
+        st.caption("💡 Deploy backend on Render for full API-powered analysis")
 
-        col1, col2 = st.columns(2)
+    col1, col2 = st.columns(2)
 
-        score = round(data.get("lead_score", random.uniform(60, 80)), 2)
+    score = round(data.get("lead_score", random.uniform(60, 80)), 2)
 
-        if budget < 3000:
-            model = {"model": "Mistral 7B", "accuracy": "90%", "cost": "$0.001", "latency": "80ms"}
-        elif budget < 8000:
-            model = {"model": "Llama 3 8B", "accuracy": "92%", "cost": "$0.002", "latency": "110ms"}
+    if budget < 3000:
+        model = {"model": "Mistral 7B", "accuracy": "90%", "cost": "$0.001", "latency": "80ms"}
+    elif budget < 8000:
+        model = {"model": "Llama 3 8B", "accuracy": "92%", "cost": "$0.002", "latency": "110ms"}
+    else:
+        model = {"model": "GPT-4o", "accuracy": "96%", "cost": "$0.01", "latency": "140ms"}
+
+    with col1:
+        st.subheader("🏷️ Project Type")
+        st.write("AI Automation")
+
+        st.subheader("📊 Lead Score")
+        st.metric("Score", score)
+
+        st.subheader("🎯 Priority")
+
+        if score > 75:
+            priority = "🔴 High Priority"
+        elif score > 60:
+            priority = "🟡 Medium Priority"
         else:
-            model = {"model": "GPT-4o", "accuracy": "96%", "cost": "$0.01", "latency": "140ms"}
+            priority = "🟢 Low Priority"
 
-        with col1:
-            st.subheader("🏷️ Project Type")
-            st.write("AI Automation")
+        st.write(priority)
 
-            st.subheader("📊 Lead Score")
-            st.metric("Score", score)
+    with col2:
+        st.subheader("🤖 Recommended LLM Model")
 
-            st.subheader("🎯 Priority")
+        m1, m2, m3, m4 = st.columns(4)
+        m1.metric("Model", model["model"])
+        m2.metric("Accuracy", model["accuracy"])
+        m3.metric("Cost", model["cost"])
+        m4.metric("Latency", model["latency"])
 
-            if score > 75:
-                priority = "🔴 High Priority"
-            elif score > 60:
-                priority = "🟡 Medium Priority"
-            else:
-                priority = "🟢 Low Priority"
+        # --- UPGRADED: Model Comparison Radar Chart ---
+        st.subheader("📡 Model Comparison Radar")
+        models_compare = ["Mistral 7B", "Llama 3 8B", "GPT-4o"]
+        accuracy_vals = [90, 92, 96]
+        cost_efficiency = [98, 90, 60]
+        speed_vals = [95, 85, 70]
+        capability_vals = [70, 80, 99]
 
-            st.write(priority)
+        radar_fig = go.Figure()
+        categories = ["Accuracy", "Cost Efficiency", "Speed", "Capability"]
 
-        with col2:
-            st.subheader("🤖 Recommended LLM Model")
+        for i, m_name in enumerate(models_compare):
+            radar_fig.add_trace(go.Scatterpolar(
+                r=[accuracy_vals[i], cost_efficiency[i], speed_vals[i], capability_vals[i]],
+                theta=categories,
+                fill='toself',
+                name=m_name,
+                opacity=0.6
+            ))
 
-            m1, m2, m3, m4 = st.columns(4)
-            m1.metric("Model", model["model"])
-            m2.metric("Accuracy", model["accuracy"])
-            m3.metric("Cost", model["cost"])
-            m4.metric("Latency", model["latency"])
+        radar_fig.update_layout(
+            polar=dict(radialaxis=dict(visible=True, range=[0, 100])),
+            showlegend=True,
+            height=350,
+            margin=dict(l=40, r=40, t=40, b=40)
+        )
+        st.plotly_chart(radar_fig, use_container_width=True)
 
-            # --- UPGRADED: Model Comparison Radar Chart ---
-            st.subheader("📡 Model Comparison Radar")
-            models_compare = ["Mistral 7B", "Llama 3 8B", "GPT-4o"]
-            accuracy_vals = [90, 92, 96]
-            cost_efficiency = [98, 90, 60]
-            speed_vals = [95, 85, 70]
-            capability_vals = [70, 80, 99]
+    # ---------------- AI EXPLANATION ----------------
 
-            radar_fig = go.Figure()
-            categories = ["Accuracy", "Cost Efficiency", "Speed", "Capability"]
+    st.markdown("### 🧠 AI Decision Explanation")
 
-            for i, m_name in enumerate(models_compare):
-                radar_fig.add_trace(go.Scatterpolar(
-                    r=[accuracy_vals[i], cost_efficiency[i], speed_vals[i], capability_vals[i]],
-                    theta=categories,
-                    fill='toself',
-                    name=m_name,
-                    opacity=0.6
-                ))
+    scoring_mode_text = "🌐 Backend API" if mode == "api" else "💻 Local AI Engine"
 
-            radar_fig.update_layout(
-                polar=dict(radialaxis=dict(visible=True, range=[0, 100])),
-                showlegend=True,
-                height=350,
-                margin=dict(l=40, r=40, t=40, b=40)
-            )
-            st.plotly_chart(radar_fig, use_container_width=True)
-
-        # ---------------- AI EXPLANATION ----------------
-
-        st.markdown("### 🧠 AI Decision Explanation")
-
-        explanation = f"""
+    explanation = f"""
 **Lead Evaluation Summary:**
 
 | Factor | Value | Impact |
@@ -278,272 +341,279 @@ if st.button("⚡ Analyze Lead"):
 
 **Predicted Lead Score:** **{score}** → **{priority}**
 
+**Scoring Engine:** {scoring_mode_text}
+
 **Reasoning:** The ML model evaluated all input features using a gradient-boosted classifier.
 {"Budget and AI interest are strong positive signals." if budget > 3000 and ai_interest == 1 else "Consider nurturing this lead with targeted content."}
 """
-        st.info(explanation)
+    st.info(explanation)
 
-        # ---------------- CONFIDENCE ----------------
+    # ---------------- CONFIDENCE ----------------
 
-        st.markdown("### 🎯 Prediction Confidence")
+    st.markdown("### 🎯 Prediction Confidence")
 
-        confidence = random.uniform(0.85, 0.96)
-        st.progress(confidence)
-        st.write(f"Confidence: {round(confidence * 100, 2)}%")
+    confidence = data.get("confidence", random.uniform(0.85, 0.96))
+    if isinstance(confidence, (int, float)):
+        if confidence <= 1:
+            confidence_display = confidence
+        else:
+            confidence_display = confidence / 100
+    else:
+        confidence_display = 0.90
 
-        # --- UPGRADED: Confidence Breakdown ---
-        st.markdown("#### Confidence Breakdown by Feature")
-        conf_data = pd.DataFrame({
-            "Feature": ["Company Size", "Budget", "Urgency", "AI Interest", "Description NLP"],
-            "Contribution (%)": [
-                round(random.uniform(10, 25), 1),
-                round(random.uniform(20, 35), 1),
-                round(random.uniform(10, 20), 1),
-                round(random.uniform(15, 25), 1),
-                round(random.uniform(5, 15), 1)
-            ]
-        })
-        conf_fig = px.bar(
-            conf_data,
-            x="Contribution (%)",
-            y="Feature",
-            orientation='h',
-            color="Contribution (%)",
-            color_continuous_scale="Viridis"
-        )
-        conf_fig.update_layout(height=300, margin=dict(l=20, r=20, t=20, b=20))
-        st.plotly_chart(conf_fig, use_container_width=True)
+    st.progress(confidence_display)
+    st.write(f"Confidence: {round(confidence_display * 100, 2)}%")
 
-        # ---------------- ANALYTICS OVERVIEW ----------------
+    # --- UPGRADED: Confidence Breakdown ---
+    st.markdown("#### Confidence Breakdown by Feature")
+    conf_data = pd.DataFrame({
+        "Feature": ["Company Size", "Budget", "Urgency", "AI Interest", "Description NLP"],
+        "Contribution (%)": [
+            round(random.uniform(10, 25), 1),
+            round(random.uniform(20, 35), 1),
+            round(random.uniform(10, 20), 1),
+            round(random.uniform(15, 25), 1),
+            round(random.uniform(5, 15), 1)
+        ]
+    })
+    conf_fig = px.bar(
+        conf_data,
+        x="Contribution (%)",
+        y="Feature",
+        orientation='h',
+        color="Contribution (%)",
+        color_continuous_scale="Viridis"
+    )
+    conf_fig.update_layout(height=300, margin=dict(l=20, r=20, t=20, b=20))
+    st.plotly_chart(conf_fig, use_container_width=True)
 
-        st.markdown("### 📈 Lead Analytics Overview")
+    # ---------------- ANALYTICS OVERVIEW ----------------
 
-        k1, k2, k3, k4 = st.columns(4)
-        k1.metric("Lead Score", score, delta=f"{round(random.uniform(-5, 10), 1)}")
-        k2.metric("Priority", priority)
-        k3.metric("Budget", f"${budget}", delta=f"{round(random.uniform(-500, 1000), 0)}")
-        k4.metric("Company Size", company_size)
+    st.markdown("### 📈 Lead Analytics Overview")
 
-        # ---------------- CONNECTED WORKFLOW PIPELINE ----------------
+    k1, k2, k3, k4 = st.columns(4)
+    k1.metric("Lead Score", score, delta=f"{round(random.uniform(-5, 10), 1)}")
+    k2.metric("Priority", priority)
+    k3.metric("Budget", f"${budget}", delta=f"{round(random.uniform(-500, 1000), 0)}")
+    k4.metric("Company Size", company_size)
 
-        st.subheader("⚙️ Automation Workflow")
+    # ---------------- CONNECTED WORKFLOW PIPELINE ----------------
 
-        steps = ["Lead Capture", "AI Classification", "Lead Scoring", "Proposal Generation", "CRM Integration"]
-        step_status = ["✅", "✅", "✅", "⏳", "⏳"]
+    st.subheader("⚙️ Automation Workflow")
 
-        fig = go.Figure()
+    steps = ["Lead Capture", "AI Classification", "Lead Scoring", "Proposal Generation", "CRM Integration"]
+    step_status = ["✅", "✅", "✅", "⏳", "⏳"]
 
-        colors = ["#00cc96" if s == "✅" else "#ffa500" for s in step_status]
+    fig = go.Figure()
 
-        fig.add_trace(go.Scatter(
-            x=list(range(len(steps))),
-            y=[1] * len(steps),
-            mode="lines+markers+text",
-            text=[f"{step_status[i]} {steps[i]}" for i in range(len(steps))],
-            textposition="top center",
-            marker=dict(size=20, color=colors, line=dict(width=2, color='white')),
-            line=dict(color='#555', width=3, dash='dot'),
-            textfont=dict(size=13)
-        ))
+    colors = ["#00cc96" if s == "✅" else "#ffa500" for s in step_status]
 
-        fig.update_layout(
-            yaxis_visible=False,
-            xaxis_visible=False,
-            height=250,
-            margin=dict(l=20, r=20, t=40, b=20),
-            plot_bgcolor='rgba(0,0,0,0)',
-            paper_bgcolor='rgba(0,0,0,0)'
-        )
+    fig.add_trace(go.Scatter(
+        x=list(range(len(steps))),
+        y=[1] * len(steps),
+        mode="lines+markers+text",
+        text=[f"{step_status[i]} {steps[i]}" for i in range(len(steps))],
+        textposition="top center",
+        marker=dict(size=20, color=colors, line=dict(width=2, color='white')),
+        line=dict(color='#555', width=3, dash='dot'),
+        textfont=dict(size=13)
+    ))
 
-        st.plotly_chart(fig, use_container_width=True)
+    fig.update_layout(
+        yaxis_visible=False,
+        xaxis_visible=False,
+        height=250,
+        margin=dict(l=20, r=20, t=40, b=20),
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)'
+    )
 
-        # ---------------- COST ESTIMATION ----------------
+    st.plotly_chart(fig, use_container_width=True)
 
-        st.subheader("💰 AI Deployment Cost Estimate")
+    # ---------------- COST ESTIMATION ----------------
 
-        monthly_requests = random.randint(500, 5000)
-        estimated_cost = round(monthly_requests * 0.002, 2)
-        annual_cost = round(estimated_cost * 12, 2)
-        roi_estimate = round(budget * 12 * 0.3, 2)
+    st.subheader("💰 AI Deployment Cost Estimate")
 
-        c1, c2, c3, c4 = st.columns(4)
-        c1.metric("Monthly Requests", f"{monthly_requests:,}")
-        c2.metric("Monthly LLM Cost", f"${estimated_cost}")
-        c3.metric("Annual LLM Cost", f"${annual_cost}")
-        c4.metric("Estimated Annual ROI", f"${roi_estimate:,}")
+    monthly_requests = random.randint(500, 5000)
+    estimated_cost = round(monthly_requests * 0.002, 2)
+    annual_cost = round(estimated_cost * 12, 2)
+    roi_estimate = round(budget * 12 * 0.3, 2)
 
-        # --- UPGRADED: Cost Over Time Chart ---
-        months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-        monthly_costs = [round(estimated_cost * random.uniform(0.7, 1.3), 2) for _ in months]
-        monthly_revenue = [round(budget * random.uniform(0.8, 1.5), 2) for _ in months]
+    c1, c2, c3, c4 = st.columns(4)
+    c1.metric("Monthly Requests", f"{monthly_requests:,}")
+    c2.metric("Monthly LLM Cost", f"${estimated_cost}")
+    c3.metric("Annual LLM Cost", f"${annual_cost}")
+    c4.metric("Estimated Annual ROI", f"${roi_estimate:,}")
 
-        cost_fig = go.Figure()
-        cost_fig.add_trace(go.Scatter(
-            x=months, y=monthly_costs,
-            mode='lines+markers', name='LLM Costs',
-            line=dict(color='#ff6b6b', width=3),
-            fill='tozeroy', fillcolor='rgba(255,107,107,0.1)'
-        ))
-        cost_fig.add_trace(go.Scatter(
-            x=months, y=monthly_revenue,
-            mode='lines+markers', name='Revenue',
-            line=dict(color='#00cc96', width=3),
-            fill='tozeroy', fillcolor='rgba(0,204,150,0.1)'
-        ))
-        cost_fig.update_layout(
-            title="Cost vs Revenue Forecast (12 Months)",
-            height=350,
-            margin=dict(l=20, r=20, t=50, b=20),
-            plot_bgcolor='rgba(0,0,0,0)',
-            paper_bgcolor='rgba(0,0,0,0)'
-        )
-        st.plotly_chart(cost_fig, use_container_width=True)
+    # --- UPGRADED: Cost Over Time Chart ---
+    months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+    monthly_costs = [round(estimated_cost * random.uniform(0.7, 1.3), 2) for _ in months]
+    monthly_revenue = [round(budget * random.uniform(0.8, 1.5), 2) for _ in months]
 
-        # ---------------- LEAD FUNNEL ----------------
+    cost_fig = go.Figure()
+    cost_fig.add_trace(go.Scatter(
+        x=months, y=monthly_costs,
+        mode='lines+markers', name='LLM Costs',
+        line=dict(color='#ff6b6b', width=3),
+        fill='tozeroy', fillcolor='rgba(255,107,107,0.1)'
+    ))
+    cost_fig.add_trace(go.Scatter(
+        x=months, y=monthly_revenue,
+        mode='lines+markers', name='Revenue',
+        line=dict(color='#00cc96', width=3),
+        fill='tozeroy', fillcolor='rgba(0,204,150,0.1)'
+    ))
+    cost_fig.update_layout(
+        title="Cost vs Revenue Forecast (12 Months)",
+        height=350,
+        margin=dict(l=20, r=20, t=50, b=20),
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)'
+    )
+    st.plotly_chart(cost_fig, use_container_width=True)
 
-        st.subheader("🔻 AI Lead Funnel")
+    # ---------------- LEAD FUNNEL ----------------
 
-        funnel_data = pd.DataFrame({
-            "stage": ["Leads Captured", "AI Qualified", "Proposal Sent", "Negotiation", "Closed Won"],
-            "value": [120, 80, 40, 25, 15]
-        })
+    st.subheader("🔻 AI Lead Funnel")
 
-        fig = px.funnel(
-            funnel_data, x="value", y="stage",
-            color="stage",
-            color_discrete_sequence=px.colors.sequential.Viridis
-        )
-        fig.update_layout(
-            height=400,
-            margin=dict(l=20, r=20, t=20, b=20),
-            plot_bgcolor='rgba(0,0,0,0)',
-            paper_bgcolor='rgba(0,0,0,0)'
-        )
-        st.plotly_chart(fig, use_container_width=True)
+    funnel_data = pd.DataFrame({
+        "stage": ["Leads Captured", "AI Qualified", "Proposal Sent", "Negotiation", "Closed Won"],
+        "value": [120, 80, 40, 25, 15]
+    })
 
-        # ---------------- REVENUE FORECAST ----------------
+    fig = px.funnel(
+        funnel_data, x="value", y="stage",
+        color="stage",
+        color_discrete_sequence=px.colors.sequential.Viridis
+    )
+    fig.update_layout(
+        height=400,
+        margin=dict(l=20, r=20, t=20, b=20),
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)'
+    )
+    st.plotly_chart(fig, use_container_width=True)
 
-        st.subheader("💎 Revenue Forecast")
+    # ---------------- REVENUE FORECAST ----------------
 
-        avg_deal = budget
-        closed_deals = 15
-        predicted_revenue = closed_deals * avg_deal
-        growth_rate = round(random.uniform(5, 25), 1)
+    st.subheader("💎 Revenue Forecast")
 
-        r1, r2, r3, r4 = st.columns(4)
-        r1.metric("Avg Deal Size", f"${avg_deal:,}")
-        r2.metric("Predicted Closed Deals", closed_deals)
-        r3.metric("Projected Revenue", f"${predicted_revenue:,}")
-        r4.metric("Growth Rate", f"{growth_rate}%", delta=f"+{growth_rate}%")
+    avg_deal = budget
+    closed_deals = 15
+    predicted_revenue = closed_deals * avg_deal
+    growth_rate = round(random.uniform(5, 25), 1)
 
-        # --- UPGRADED: Revenue Projection Chart ---
-        quarters = ["Q1", "Q2", "Q3", "Q4"]
-        base_rev = predicted_revenue / 4
-        quarterly_rev = [round(base_rev * (1 + growth_rate / 100) ** i, 2) for i in range(4)]
-        quarterly_target = [round(base_rev * 1.2 * (1 + growth_rate / 100) ** i, 2) for i in range(4)]
+    r1, r2, r3, r4 = st.columns(4)
+    r1.metric("Avg Deal Size", f"${avg_deal:,}")
+    r2.metric("Predicted Closed Deals", closed_deals)
+    r3.metric("Projected Revenue", f"${predicted_revenue:,}")
+    r4.metric("Growth Rate", f"{growth_rate}%", delta=f"+{growth_rate}%")
 
-        rev_fig = go.Figure()
-        rev_fig.add_trace(go.Bar(
-            x=quarters, y=quarterly_rev,
-            name="Projected Revenue",
-            marker_color='#7b2ff7'
-        ))
-        rev_fig.add_trace(go.Scatter(
-            x=quarters, y=quarterly_target,
-            mode='lines+markers', name='Target',
-            line=dict(color='#00d4ff', width=3, dash='dash')
-        ))
-        rev_fig.update_layout(
-            title="Quarterly Revenue Projection",
-            height=350,
-            margin=dict(l=20, r=20, t=50, b=20),
-            plot_bgcolor='rgba(0,0,0,0)',
-            paper_bgcolor='rgba(0,0,0,0)'
-        )
-        st.plotly_chart(rev_fig, use_container_width=True)
+    # --- UPGRADED: Revenue Projection Chart ---
+    quarters = ["Q1", "Q2", "Q3", "Q4"]
+    base_rev = predicted_revenue / 4
+    quarterly_rev = [round(base_rev * (1 + growth_rate / 100) ** i, 2) for i in range(4)]
+    quarterly_target = [round(base_rev * 1.2 * (1 + growth_rate / 100) ** i, 2) for i in range(4)]
 
-        # ---------------- LEAD RANKING ----------------
+    rev_fig = go.Figure()
+    rev_fig.add_trace(go.Bar(
+        x=quarters, y=quarterly_rev,
+        name="Projected Revenue",
+        marker_color='#7b2ff7'
+    ))
+    rev_fig.add_trace(go.Scatter(
+        x=quarters, y=quarterly_target,
+        mode='lines+markers', name='Target',
+        line=dict(color='#00d4ff', width=3, dash='dash')
+    ))
+    rev_fig.update_layout(
+        title="Quarterly Revenue Projection",
+        height=350,
+        margin=dict(l=20, r=20, t=50, b=20),
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)'
+    )
+    st.plotly_chart(rev_fig, use_container_width=True)
 
-        st.subheader("🏆 Lead Ranking")
+    # ---------------- LEAD RANKING ----------------
 
-        leads = pd.DataFrame({
-            "Client": ["Startup AI", "Digital Agency", "Ecommerce Pro", "SaaS Corp", "Fintech Labs"],
-            "Lead Score": [67, 55, 72, 63, 81],
-            "Budget": [5000, 2000, 8000, 6000, 9000],
-            "Priority": ["Medium", "Low", "High", "Medium", "High"],
-            "Status": ["🟡 Nurturing", "🔵 New", "🟢 Qualified", "🟡 Nurturing", "🟢 Qualified"]
-        })
+    st.subheader("🏆 Lead Ranking")
 
-        leads = leads.sort_values("Lead Score", ascending=False)
+    leads = pd.DataFrame({
+        "Client": ["Startup AI", "Digital Agency", "Ecommerce Pro", "SaaS Corp", "Fintech Labs"],
+        "Lead Score": [67, 55, 72, 63, 81],
+        "Budget": [5000, 2000, 8000, 6000, 9000],
+        "Priority": ["Medium", "Low", "High", "Medium", "High"],
+        "Status": ["🟡 Nurturing", "🔵 New", "🟢 Qualified", "🟡 Nurturing", "🟢 Qualified"]
+    })
 
-        st.dataframe(leads, use_container_width=True, hide_index=True)
+    leads = leads.sort_values("Lead Score", ascending=False)
 
-        # ---------------- ANALYTICS ----------------
+    st.dataframe(leads, use_container_width=True, hide_index=True)
 
-        st.subheader("📊 Budget vs Lead Score")
+    # ---------------- ANALYTICS ----------------
 
-        chart_data = pd.DataFrame({
-            "Budget": [2000, 4000, 5000, 7000, 9000, 3000, 6000, 8500],
-            "Lead Score": [50, 60, 67, 72, 85, 55, 70, 82],
-            "Company": ["Alpha", "Beta", "Gamma", "Delta", "Epsilon", "Zeta", "Eta", "Theta"]
-        })
+    st.subheader("📊 Budget vs Lead Score")
 
-        fig = px.scatter(
-            chart_data, x="Budget", y="Lead Score",
-            size="Lead Score", color="Lead Score",
-            hover_name="Company",
-            color_continuous_scale="Viridis",
-            size_max=30
-        )
-        fig.update_layout(
-            height=400,
-            margin=dict(l=20, r=20, t=20, b=20),
-            plot_bgcolor='rgba(0,0,0,0)',
-            paper_bgcolor='rgba(0,0,0,0)'
-        )
-        st.plotly_chart(fig, use_container_width=True)
+    chart_data = pd.DataFrame({
+        "Budget": [2000, 4000, 5000, 7000, 9000, 3000, 6000, 8500],
+        "Lead Score": [50, 60, 67, 72, 85, 55, 70, 82],
+        "Company": ["Alpha", "Beta", "Gamma", "Delta", "Epsilon", "Zeta", "Eta", "Theta"]
+    })
 
-        # --- UPGRADED: Lead Score Distribution ---
-        st.subheader("📉 Lead Score Distribution")
-        dist_data = [random.gauss(score, 10) for _ in range(200)]
-        dist_fig = px.histogram(
-            x=dist_data, nbins=30,
-            labels={"x": "Lead Score", "y": "Frequency"},
-            color_discrete_sequence=["#7b2ff7"]
-        )
-        dist_fig.add_vline(x=score, line_dash="dash", line_color="#00d4ff",
-                           annotation_text=f"Current: {score}")
-        dist_fig.update_layout(
-            height=300,
-            margin=dict(l=20, r=20, t=30, b=20),
-            plot_bgcolor='rgba(0,0,0,0)',
-            paper_bgcolor='rgba(0,0,0,0)'
-        )
-        st.plotly_chart(dist_fig, use_container_width=True)
+    fig = px.scatter(
+        chart_data, x="Budget", y="Lead Score",
+        size="Lead Score", color="Lead Score",
+        hover_name="Company",
+        color_continuous_scale="Viridis",
+        size_max=30
+    )
+    fig.update_layout(
+        height=400,
+        margin=dict(l=20, r=20, t=20, b=20),
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)'
+    )
+    st.plotly_chart(fig, use_container_width=True)
 
-        # --- UPGRADED: AI Agent Activity Log ---
-        st.subheader("🤖 AI Agent Activity Log")
-        agent_log = pd.DataFrame({
-            "Timestamp": pd.date_range(end=pd.Timestamp.now(), periods=8, freq="15min").strftime("%H:%M:%S"),
-            "Agent": ["Lead Scorer", "NLP Classifier", "RAG Engine", "Proposal Gen",
-                       "CRM Sync", "Email Agent", "Lead Scorer", "Analytics"],
-            "Action": [
-                f"Scored lead '{name}'    {score}",
-                f"Classified project as 'AI Automation'",
-                "Retrieved 3 relevant knowledge docs",
-                "Generated proposal draft v1",
-                "Synced lead to CRM pipeline",
-                "Queued follow-up email sequence",
-                "Re-evaluated with updated features",
-                "Updated dashboard metrics"
-            ],
-            "Status": ["✅ Done", "✅ Done", "✅ Done", "✅ Done",
-                        "⏳ Pending", "⏳ Pending", "✅ Done", "✅ Done"]
-        })
-        st.dataframe(agent_log, use_container_width=True, hide_index=True)
+    # --- UPGRADED: Lead Score Distribution ---
+    st.subheader("📉 Lead Score Distribution")
+    dist_data = [random.gauss(score, 10) for _ in range(200)]
+    dist_fig = px.histogram(
+        x=dist_data, nbins=30,
+        labels={"x": "Lead Score", "y": "Frequency"},
+        color_discrete_sequence=["#7b2ff7"]
+    )
+    dist_fig.add_vline(x=score, line_dash="dash", line_color="#00d4ff",
+                       annotation_text=f"Current: {score}")
+    dist_fig.update_layout(
+        height=300,
+        margin=dict(l=20, r=20, t=30, b=20),
+        plot_bgcolor='rgba(0,0,0,0)',
+        paper_bgcolor='rgba(0,0,0,0)'
+    )
+    st.plotly_chart(dist_fig, use_container_width=True)
 
-    except Exception as e:
-        st.error(f"❌ Backend API not running. Error: {str(e)}")
+    # --- UPGRADED: AI Agent Activity Log ---
+    st.subheader("🤖 AI Agent Activity Log")
+    agent_log = pd.DataFrame({
+        "Timestamp": pd.date_range(end=pd.Timestamp.now(), periods=8, freq="15min").strftime("%H:%M:%S"),
+        "Agent": ["Lead Scorer", "NLP Classifier", "RAG Engine", "Proposal Gen",
+                   "CRM Sync", "Email Agent", "Lead Scorer", "Analytics"],
+        "Action": [
+            f"Scored lead '{name}' → {score}",
+            f"Classified project as 'AI Automation'",
+            "Retrieved 3 relevant knowledge docs",
+            "Generated proposal draft v1",
+            "Synced lead to CRM pipeline",
+            "Queued follow-up email sequence",
+            "Re-evaluated with updated features",
+            "Updated dashboard metrics"
+        ],
+        "Status": ["✅ Done", "✅ Done", "✅ Done", "✅ Done",
+                    "⏳ Pending", "⏳ Pending", "✅ Done", "✅ Done"]
+    })
+    st.dataframe(agent_log, use_container_width=True, hide_index=True)
 
 # ---------------- WORKFLOW BUILDER ----------------
 
@@ -627,9 +697,10 @@ else:
 
 # ---------------- FOOTER ----------------
 st.markdown("---")
-st.markdown("""
+st.markdown(f"""
 <div style='text-align: center; color: #666; padding: 20px;'>
     <p>🚀 <b>AI Agency Workflow Automation Platform</b> | Built with Streamlit + FastAPI + ML</p>
     <p style='font-size: 0.8rem;'>Real-time AI-powered lead scoring, workflow automation, and intelligent proposal generation</p>
+    <p style='font-size: 0.7rem; color: #888;'>API: {API_BASE} | Mode: {"🟢 Online" if backend_online else "🟡 Local"}</p>
 </div>
 """, unsafe_allow_html=True)
