@@ -8,7 +8,6 @@
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
 [![Streamlit](https://img.shields.io/badge/Streamlit-1.28+-FF4B4B?style=flat-square&logo=streamlit&logoColor=white)](https://streamlit.io)
 [![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-1.3+-F7931E?style=flat-square&logo=scikit-learn&logoColor=white)](https://scikit-learn.org)
-[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
 [![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen?style=flat-square)](CONTRIBUTING.md)
 
 <br/>
@@ -19,7 +18,7 @@
 
 <br/>
 
-<img src="https://raw.githubusercontent.com/yourusername/ai-agency-workflow-automation/main/assets/dashboard-preview.png" alt="Dashboard Preview" width="90%" />
+<img src="https://raw.githubusercontent.com/debasmita30/ai-agency-workflow-automation/main/assets/dashboard-preview.png" alt="Dashboard Preview" width="90%" />
 
 </div>
 
