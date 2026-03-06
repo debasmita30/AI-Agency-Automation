@@ -50,16 +50,22 @@ Agencies waste **countless hours** manually qualifying leads, writing proposals,
 ### The Problem
 
 ❌ Manual lead qualification → hours wasted on low-quality leads
+
 ❌ Proposal writing from scratch → repetitive, time-consuming
+
 ❌ No unified workflow → scattered tools, no automation
+
 ❌ Poor analytics → decisions based on gut feeling
 
 
 ### The Solution
 
 ✅ ML-powered lead scoring → instant qualification in seconds
+
 ✅ AI proposal generation → professional proposals automatically
+
 ✅ Workflow orchestration → automated end-to-end pipelines
+
 ✅ Real-time analytics → data-driven decision making
 
 
