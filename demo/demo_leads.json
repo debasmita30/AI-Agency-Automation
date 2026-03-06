@@ -1,0 +1,17 @@
+[
+{
+"name":"Startup Founder",
+"email":"founder@test.com",
+"description":"We need AI automation for lead qualification"
+},
+{
+"name":"Marketing Agency",
+"email":"agency@test.com",
+"description":"Automate proposal generation for clients"
+},
+{
+"name":"Ecommerce Brand",
+"email":"brand@test.com",
+"description":"Need AI chatbot for customer service"
+}
+]

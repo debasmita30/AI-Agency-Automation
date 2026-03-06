@@ -1,0 +1,17 @@
+AI automation agencies typically automate:
+
+Lead qualification workflows
+Client onboarding pipelines
+Automated proposal generation
+CRM integrations
+Email marketing automation
+Customer support chatbots
+Marketing campaign automation
+
+Automation tools often used include:
+Zapier
+n8n
+Make
+HubSpot
+Salesforce
+Airtable
