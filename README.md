@@ -15,7 +15,7 @@
 
 **An end-to-end AI-powered platform that automates agency operations �� from lead qualification and ML-based scoring to intelligent proposal generation and workflow orchestration.**
 
-[🌐 Live Demo](https://your-deployed-link.streamlit.app) · [📖 Documentation](#-documentation) · [🐛 Report Bug](https://github.com/yourusername/ai-agency-workflow-automation/issues) · [💡 Request Feature](https://github.com/yourusername/ai-agency-workflow-automation/issues)
+[🌐 Live Demo](https://your-deployed-link.streamlit.app) · [📖 Documentation](#-documentation) 
 
 <br/>
 
@@ -63,9 +63,7 @@ Agencies waste **countless hours** manually qualifying leads, writing proposals,
 ✅ Workflow orchestration → automated end-to-end pipelines
 ✅ Real-time analytics → data-driven decision making
 
-markdown
 
-Copy code
 
 ---
 
@@ -197,18 +195,21 @@ graph TD
 
 ## 📂 Project Structure
 
-## 📂 Project Structure
 
 
 ai-agency-workflow-automation/
+
 │
 ├── 🚀 app/                              # Backend Application
+
 │   ├── main.py                          # FastAPI entry point
+
 │   │
 │   ├── routes/
 │   │   └── lead_routes.py               # API endpoints for leads
 │   │
 │   ├── services/
+
 │   │   ├── lead_scoring_service.py      # ML scoring logic
 │   │   ├── proposal_generator.py        # AI proposal engine
 │   │   ├── ai_analyzer.py              # Lead analysis service
@@ -216,38 +217,49 @@ ai-agency-workflow-automation/
 │   │   ├── cost_optimizer.py            # Cost optimization
 │   │   └── workflow_generator.py        # Workflow builder
 │   │
+
 │   ├── models/
+
 │   │   ├── lead_schema.py              # Pydantic data models
 │   │   └── lead_model.py               # Lead data model
 │   │
+
 │   ├── ml/
 │   │   ├── train_model.py              # Model training script
 │   │   └── lead_model.pkl              # Trained ML model
 │   │
+
 │   ├── rag/
 │   │   ├── knowledge_loader.py         # RAG document loader
 │   │   └── agency_docs.txt             # Knowledge base
 │   │
+
 │   ├── config.py                        # App configuration
 │   └── database.py                      # Database connection
 │
+
 ├── 📊 dashboard/
 │   └── dashboard.py                     # Streamlit analytics UI
 │
+
 ├── 📁 data/
 │   ├── training_data.csv                # Training dataset
 │   └── leads.db                         # SQLite database
 │
+
 ├── 🎬 demo/
 │   └── demo_leads.json                  # Sample lead data
 │
+
 ├── 🔗 workflows/
 │   └── n8n_workflow.json                # n8n automation workflow
 │
+
 ├── 📁 .github/
 │   └── workflows/
 │       └── ci.yml                       # CI/CD pipeline
 │
+
 ├── requirements.txt                      # Python dependencies
 ├── run.sh                               # Startup script
 ├── .gitignore                           # Git ignore rules
