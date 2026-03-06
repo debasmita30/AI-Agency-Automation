@@ -1,29 +1,29 @@
-from transformers import pipeline
+def generate_proposal(project_type: str, description: str):
 
-generator = pipeline(
-    "text-generation",
-    model="google/flan-t5-base"
-)
+    proposal = f"""
+Hello,
 
-def generate_proposal(project_type, description):
+Thank you for sharing your requirements regarding {project_type}.
 
-    prompt = f"""
-Write a professional proposal for an AI automation project.
+Based on your project description:
 
-Project Type: {project_type}
+{description}
 
-Client Request: {description}
+Our team can design and deploy an AI-driven solution including:
 
-Include:
-1. brief solution
-2. estimated timeline
-3. expected outcome
+• Automated lead qualification  
+• Workflow automation pipelines  
+• CRM integrations (HubSpot, Salesforce)  
+• Scalable AI models for future expansion  
+
+Estimated Timeline:
+2–4 weeks depending on integration complexity.
+
+Expected Outcome:
+Higher lead conversion rates, automated client workflows, and improved operational efficiency.
+
+Best regards  
+AI Solutions Team
 """
 
-    result = generator(
-        prompt,
-        max_length=200,
-        do_sample=True
-    )
-
-    return result[0]["generated_text"]
+    return proposal.strip()
