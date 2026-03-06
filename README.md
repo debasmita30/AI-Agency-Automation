@@ -55,9 +55,6 @@ Agencies waste **countless hours** manually qualifying leads, writing proposals,
 ❌ No unified workflow → scattered tools, no automation
 ❌ Poor analytics → decisions based on gut feeling
 
-shell
-
-Copy code
 
 ### The Solution
 
@@ -145,51 +142,32 @@ Agency-level intelligence powered by **Streamlit + Plotly**:
 
 ## 🏗 System Architecture
 
+```mermaid
+graph TD
+    A[🖥 Web Form] --> D[⚡ FastAPI Backend]
+    B[📡 API Client] --> D
+    C[📊 Streamlit Dashboard] --> D
+    
+    D --> E[🤖 AI Analyzer]
+    D --> F[🧠 ML Lead Scoring]
+    D --> G[📑 Proposal Generator]
+    
+    E --> H[📂 FAISS Vector Index]
+    F --> I[🎯 Trained Model - lead_model.pkl]
+    G --> J[📄 Training Data - training_data.csv]
+    
+    style A fill:#4CAF50,color:#fff
+    style B fill:#4CAF50,color:#fff
+    style C fill:#4CAF50,color:#fff
+    style D fill:#2196F3,color:#fff
+    style E fill:#FF9800,color:#fff
+    style F fill:#FF9800,color:#fff
+    style G fill:#FF9800,color:#fff
+    style H fill:#9C27B0,color:#fff
+    style I fill:#9C27B0,color:#fff
+    style J fill:#9C27B0,color:#fff
 
-┌─────────────────────────────────────────────────────────────────┐
-│                        CLIENT LAYER                             │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────────────┐  │
-│  │  Web Form    │  │  API Client  │  │  Streamlit Dashboard │  │
-│  └──────┬───────┘  └──────┬───────┘  └──────────┬───────────┘  │
-│         │                 │                      │              │
-└─────────┼─────────────────┼──────────────────────┼──────────────┘
-│                 │                      │
-▼                 ▼                      ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                      API GATEWAY (FastAPI)                       │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────────────┐  │
-│  │ Lead Routes  │  │ Auth Layer   │  │  Request Validation  │  │
-│  └──────┬───────┘  └──────────────┘  └──────────────────────┘  │
-└─────────┼───────────────────────────────────────────────────────┘
-│
-▼
-┌─────────────────────────────────────────────────────────────────┐
-│                      SERVICE LAYER                              │
-│                                                                 │
-│  ┌─────────────┐  ┌─────────────────┐  ┌───────────────────┐  │
-│  │ AI Analyzer │  │ Lead Scoring    │  │ Proposal Generator│  │
-│  │             │  │ Service         │  │                   │  │
-│  │ • NLP       │  │ • ML Pipeline   │  │ • LLM Generation  │  │
-│  │ • Classify  │  │ • Feature Eng.  │  │ • Template Engine │  │
-│  │ • Evaluate  │  │ • Prediction    │  │ • Customization   │  │
-│  └──────┬──────┘  └────────┬────────┘  └────────┬──────────┘  │
-│         │                  │                     │              │
-└─────────┼──────────────────┼─────────────────────┼──────────────┘
-│                  │                     │
-▼                  ▼                     ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                      DATA / ML LAYER                            │
-│  ┌─────────────┐  ┌─────────────────┐  ┌───────────────────┐  │
-│  │ FAISS Index │  │ Trained Model   │  │ Training Data     │  │
-│  │ (Vectors)   │  │ (lead_model.pkl)│  │ (training_data.csv│  │
-│  └─────────────┘  └─────────────────┘  └───────────────────┘  │
-└─────────────────────────────────────────────────────────────────┘
-
-yaml
-
-Copy code
-
----
+```
 
 ## 🛠 Tech Stack
 
@@ -219,39 +197,65 @@ Copy code
 
 ## 📂 Project Structure
 
+## 📂 Project Structure
+
 
 ai-agency-workflow-automation/
 │
-├── 📁 app/                          # Backend Application
-│   ├── 📄 main.py                   # FastAPI entry point
-│   ├── 📁 routes/
-│   │   └── 📄 lead_routes.py        # API endpoints for leads
-│   ├── 📁 services/
-│   │   ├── 📄 lead_scoring_service.py   # ML scoring logic
-│   │   ├── 📄 proposal_generator.py     # AI proposal engine
-│   │   └── 📄 ai_analyzer.py           # Lead analysis service
-│   ├── 📁 models/
-│   │   └── 📄 lead_schema.py        # Pydantic data models
-│   └── 📁 ml/
-│       ├── 📄 train_model.py        # Model training script
-│       └── 📦 lead_model.pkl        # Trained ML model
+├── 🚀 app/                              # Backend Application
+│   ├── main.py                          # FastAPI entry point
+│   │
+│   ├── routes/
+│   │   └── lead_routes.py               # API endpoints for leads
+│   │
+│   ├── services/
+│   │   ├── lead_scoring_service.py      # ML scoring logic
+│   │   ├── proposal_generator.py        # AI proposal engine
+│   │   ├── ai_analyzer.py              # Lead analysis service
+│   │   ├── automation_service.py        # Workflow automation
+│   │   ├── cost_optimizer.py            # Cost optimization
+│   │   └── workflow_generator.py        # Workflow builder
+│   │
+│   ├── models/
+│   │   ├── lead_schema.py              # Pydantic data models
+│   │   └── lead_model.py               # Lead data model
+│   │
+│   ├── ml/
+│   │   ├── train_model.py              # Model training script
+│   │   └── lead_model.pkl              # Trained ML model
+│   │
+│   ├── rag/
+│   │   ├── knowledge_loader.py         # RAG document loader
+│   │   └── agency_docs.txt             # Knowledge base
+│   │
+│   ├── config.py                        # App configuration
+│   └── database.py                      # Database connection
 │
-├── 📁 dashboard/
-│   └── 📄 dashboard.py              # Streamlit analytics UI
+├── 📊 dashboard/
+│   └── dashboard.py                     # Streamlit analytics UI
 │
 ├── 📁 data/
-│   └── 📄 training_data.csv         # Training dataset
+│   ├── training_data.csv                # Training dataset
+│   └── leads.db                         # SQLite database
 │
-├── 📁 assets/                       # Screenshots & media
+├── 🎬 demo/
+│   └── demo_leads.json                  # Sample lead data
 │
-├── 📄 requirements.txt              # Python dependencies
-├── 📄 .gitignore
-├── 📄 LICENSE
-└── 📄 README.md
+├── 🔗 workflows/
+│   └── n8n_workflow.json                # n8n automation workflow
+│
+├── 📁 .github/
+│   └── workflows/
+│       └── ci.yml                       # CI/CD pipeline
+│
+├── requirements.txt                      # Python dependencies
+├── run.sh                               # Startup script
+├── .gitignore                           # Git ignore rules
+├── LICENSE                              # MIT License
+└── README.md                            # Documentation
 
-yaml
 
-Copy code
+> **Total Files:** 25+ | **Languages:** Python | **Framework:** FastAPI + Streamlit
 
 ---
 
