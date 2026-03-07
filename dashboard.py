@@ -35,7 +35,7 @@ def check_backend():
 
         latency = round((time.time() - start) * 1000, 2)
 
-        if response.status_code in [200, 404]:
+        if response.status_code == 200:
             return True, latency
 
         return False, "N/A"
