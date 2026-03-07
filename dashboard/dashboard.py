@@ -26,7 +26,8 @@ def check_backend():
     """Check if backend API is available with timeout handling"""
     try:
         
-       
+        start = time.time()
+        
         try:
             response = requests.get(f"{API_BASE}/health", timeout=5)
         except Exception:
@@ -715,4 +716,5 @@ st.markdown(f"""
     <p style='font-size: 0.7rem; color: #888;'>API: {API_BASE} | Mode: {"🟢 Online" if backend_online else "🟡 Local"}</p>
 </div>
 """, unsafe_allow_html=True)
+
 
