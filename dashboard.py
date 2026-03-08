@@ -11,7 +11,7 @@ import os
 
 
 try:
-    API_BASE = st.secrets["API_URL"]
+    API_BASE = st.secrets["https://ai-agency-automation.onrender.com"]
 except Exception:
         API_BASE = os.getenv(
         "API_URL",
