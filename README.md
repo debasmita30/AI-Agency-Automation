@@ -47,7 +47,7 @@
 
 Agencies waste **countless hours** manually qualifying leads, writing proposals, and managing workflows. This platform automates the entire pipeline using **Machine Learning** and **AI-powered generation**.
 
-### The Problem
+### Problem Statement
 
 ❌ Manual lead qualification → hours wasted on low-quality leads
 
@@ -58,7 +58,7 @@ Agencies waste **countless hours** manually qualifying leads, writing proposals,
 ❌ Poor analytics → decisions based on gut feeling
 
 
-### The Solution
+### Solution
 
 ✅ ML-powered lead scoring → instant qualification in seconds
 
