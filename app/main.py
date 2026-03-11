@@ -1,8 +1,9 @@
-from fastapi import FastAPI, WebSocket
+from fastapi import FastAPI, WebSocket, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes.lead_routes import router
 from app.services.lead_scoring_service import score_lead
 from app.services.proposal_generator import generate_proposal
+from app.services.transcription_service import transcribe_audio, WHISPER_AVAILABLE
 
 app = FastAPI(
     title="AI Agency Workflow Automation API",
@@ -27,6 +28,22 @@ def home():
 @app.get("/health")
 def health_check():
     return {"status": "online", "service": "AI Agency Backend", "version": "1.0"}
+
+@app.get("/transcription/status")
+def transcription_status():
+    return {"available": WHISPER_AVAILABLE, "model": "whisper-base"}
+
+@app.post("/transcription/transcribe")
+async def transcribe(file: UploadFile = File(...)):
+    audio_bytes = await file.read()
+    result = transcribe_audio(audio_bytes, filename=file.filename)
+    if not result["success"]:
+        return {"status": "error", "message": result["error"]}
+    return {
+        "status": "success",
+        "transcription": result["text"],
+        "language": result["language"]
+    }
 
 @app.websocket("/ws/lead")
 async def websocket_lead(websocket: WebSocket):
