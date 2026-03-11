@@ -53,7 +53,7 @@ A potential client fills out a form → the system scores their lead quality usi
 
 ---
 
-## ✨ What It Does — In Plain English
+## ✨ What It Does 
 
 ```
 Client fills form  →  AI reads it  →  ML scores the lead (0-100)
