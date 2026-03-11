@@ -1,9 +1,9 @@
 from fastapi import FastAPI, WebSocket, UploadFile, File
 from fastapi.middleware.cors import CORSMiddleware
 from app.routes.lead_routes import router
-from app.services.lead_scoring_service import score_lead
+from app.services.lead_scoring_service import predict_lead_score
 from app.services.proposal_generator import generate_proposal
-from app.services.transcription_service import transcribe_audio, WHISPER_AVAILABLE
+from app.services.transcription_service import transcribe_audio, get_whisper_status
 
 app = FastAPI(
     title="AI Agency Workflow Automation API",
@@ -31,19 +31,14 @@ def health_check():
 
 @app.get("/transcription/status")
 def transcription_status():
-    return {"available": WHISPER_AVAILABLE, "model": "whisper-base"}
+    status = get_whisper_status()
+    return status
 
 @app.post("/transcription/transcribe")
 async def transcribe(file: UploadFile = File(...)):
     audio_bytes = await file.read()
-    result = transcribe_audio(audio_bytes, filename=file.filename)
-    if not result["success"]:
-        return {"status": "error", "message": result["error"]}
-    return {
-        "status": "success",
-        "transcription": result["text"],
-        "language": result["language"]
-    }
+    result = transcribe_audio(audio_bytes, filename=file.filename, content_type=file.content_type)
+    return result
 
 @app.websocket("/ws/lead")
 async def websocket_lead(websocket: WebSocket):
@@ -51,10 +46,18 @@ async def websocket_lead(websocket: WebSocket):
     try:
         data = await websocket.receive_json()
         await websocket.send_json({"stage": "received", "message": "Lead data received"})
-        score = score_lead(data)
+
+        score = predict_lead_score(
+            company_size=data.get("company_size", 10),
+            budget=data.get("budget", 5000),
+            urgency=data.get("urgency", 1),
+            ai_interest=data.get("ai_interest", 0)
+        )
         await websocket.send_json({"stage": "scored", "lead_score": score})
+
         proposal = generate_proposal(data)
         await websocket.send_json({"stage": "complete", "proposal": proposal, "lead_score": score})
+
     except Exception as e:
         await websocket.send_json({"stage": "error", "message": str(e)})
     finally:
