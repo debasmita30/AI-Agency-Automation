@@ -318,6 +318,10 @@ GET /health
 
 ## 📊 Dashboard Screenshots
 
+>  **AI System Status**
+<img width="1918" height="863" alt="image" src="https://github.com/user-attachments/assets/1b460d9a-fea0-4d98-86c3-f31abe293f8b" />
+
+
 > **Analytics Overview**
 
 <!-- Add screenshot here -->
@@ -389,9 +393,9 @@ AI/ML Engineer • LLM Systems • Generative AI • Automation
 
 ---
 
-## Screenshots
 
-<img width="1918" height="863" alt="image" src="https://github.com/user-attachments/assets/1b460d9a-fea0-4d98-86c3-f31abe293f8b" />
+
+
 
 
 ## 📄 License
