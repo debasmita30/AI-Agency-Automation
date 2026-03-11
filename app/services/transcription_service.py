@@ -1,7 +1,5 @@
 import os
-from openai import OpenAI
-
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+import tempfile
 
 def get_whisper_status() -> dict:
     api_key = os.getenv("OPENAI_API_KEY")
@@ -9,9 +7,13 @@ def get_whisper_status() -> dict:
         return {"available": True, "mode": "openai_api", "model": "whisper-1"}
     return {"available": False, "mode": "unavailable", "message": "OPENAI_API_KEY not set"}
 
-def transcribe_audio(file_bytes: bytes, filename: str, content_type: str) -> dict:
+def transcribe_audio(file_bytes: bytes, filename: str, content_type: str = "audio/wav") -> dict:
+    api_key = os.getenv("OPENAI_API_KEY")
+    if not api_key:
+        return {"status": "error", "message": "OPENAI_API_KEY not set"}
     try:
-        import tempfile, os
+        from openai import OpenAI
+        client = OpenAI(api_key=api_key)
         suffix = os.path.splitext(filename)[-1] or ".wav"
         with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as tmp:
             tmp.write(file_bytes)
