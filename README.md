@@ -2,440 +2,400 @@
 
 # 🚀 AI Agency Workflow Automation Platform
 
-### Intelligent Lead Scoring • AI Proposal Generation • Workflow Orchestration
+### From Lead to Proposal in Seconds — Powered by ML + AI
 
 [![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
-[![Streamlit](https://img.shields.io/badge/Streamlit-1.28+-FF4B4B?style=flat-square&logo=streamlit&logoColor=white)](https://streamlit.io)
-[![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-1.3+-F7931E?style=flat-square&logo=scikit-learn&logoColor=white)](https://scikit-learn.org)
-[![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen?style=flat-square)](CONTRIBUTING.md)
+[![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![Streamlit](https://img.shields.io/badge/Streamlit-Dashboard-FF4B4B?style=flat-square&logo=streamlit&logoColor=white)](https://streamlit.io)
+[![LangGraph](https://img.shields.io/badge/LangGraph-Orchestration-6B46C1?style=flat-square)](https://langchain-ai.github.io/langgraph/)
+[![Live Demo](https://img.shields.io/badge/Live-Demo-00C851?style=flat-square&logo=render&logoColor=white)](https://ai-agency-automation-h.streamlit.app/)
 
 <br/>
 
-**An end-to-end AI-powered platform that automates agency operations from lead qualification and ML-based scoring to intelligent proposal generation and workflow orchestration.**
-
-[🌐 Live Demo](https://ai-agency-automation-h.streamlit.app/) · [📖 Documentation](#-documentation) 
+> **Built for AI agencies that waste hours manually scoring leads, writing proposals, and managing client workflows.**
+> This platform automates it all — end to end.
 
 <br/>
 
-<img src="https://raw.githubusercontent.com/debasmita30/ai-agency-workflow-automation/main/assets/dashboard-preview.png" alt="Dashboard Preview" width="90%" />
+🌐 **[Live Dashboard](https://ai-agency-automation-h.streamlit.app/)** &nbsp;|&nbsp; ⚡ **[Backend API](https://ai-agency-automation.onrender.com)** &nbsp;|&nbsp; 📖 **[API Docs](https://ai-agency-automation.onrender.com/docs)**
 
 </div>
 
 ---
 
-## 📋 Table of Contents
+## 🧠 What Is This?
 
-- [Overview](#-overview)
-- [Key Features](#-key-features)
-- [System Architecture](#-system-architecture)
-- [Tech Stack](#-tech-stack)
-- [Project Structure](#-project-structure)
-- [Getting Started](#-getting-started)
-- [API Reference](#-api-reference)
-- [Dashboard Preview](#-dashboard-preview)
-- [Workflow Pipeline](#-workflow-pipeline)
-- [Performance Metrics](#-performance-metrics)
-- [Roadmap](#-roadmap)
-- [Contributing](#-contributing)
-- [Author](#-author)
-- [License](#-license)
+Imagine you run an AI agency. Every day you get 20+ leads asking about automation, chatbots, and AI solutions. You have to:
+
+- Manually read each inquiry
+- Decide if they're worth pursuing
+- Write a custom proposal for each one
+- Track everything across spreadsheets
+
+**This platform does all of that automatically in seconds.**
+
+A potential client fills out a form → the system scores their lead quality using ML → classifies their project type → generates a tailored proposal → and streams the entire workflow in real-time.
 
 ---
 
-## 🎯 Overview
+## 🎯 The Problem
 
-Agencies waste **countless hours** manually qualifying leads, writing proposals, and managing workflows. This platform automates the entire pipeline using **Machine Learning** and **AI-powered generation**.
-
-### Problem Statement
-
-❌ Manual lead qualification → hours wasted on low-quality leads
-
-❌ Proposal writing from scratch → repetitive, time-consuming
-
-❌ No unified workflow → scattered tools, no automation
-
-❌ Poor analytics → decisions based on gut feeling
-
-
-### Solution
-
-✅ ML-powered lead scoring → instant qualification in seconds
-
-✅ AI proposal generation → professional proposals automatically
-
-✅ Workflow orchestration → automated end-to-end pipelines
-
-✅ Real-time analytics → data-driven decision making
-
-
+| Without This Platform | With This Platform |
+|---|---|
+| ⏳ 2-3 hours per lead evaluation | ⚡ Instant ML scoring |
+| 📝 Proposals written from scratch | 🤖 Auto-generated professional proposals |
+| 🤷 Gut-feel prioritization | 📊 Data-driven lead ranking |
+| 🔧 Scattered tools, no workflow | 🔗 End-to-end automated pipeline |
+| 🎙️ No voice input support | 🎙️ Whisper audio transcription |
 
 ---
 
-## ✨ Key Features
+## ✨ What It Does — In Plain English
 
-<table>
-<tr>
-<td width="50%">
+```
+Client fills form  →  AI reads it  →  ML scores the lead (0-100)
+→  Generates proposal  →  Shows analytics  →  Done in < 5 seconds
+```
 
-### 🤖 AI Lead Analysis
-Automatically evaluates incoming leads using multiple parameters:
-- Company size & industry fit
-- Project budget & timeline
-- Urgency & AI interest level
-- Natural language project description
+**6 automated stages, zero manual work.**
 
-**Output:** Lead score, priority classification, confidence score
+---
 
-</td>
-<td width="50%">
+## 🔥 Key Features
 
 ### 🧠 ML Lead Scoring Engine
-Trained ML model predicts lead value using structured data:
-- Gradient Boosted scoring pipeline
-- Feature engineering from raw inputs
-- Probability calibration
-- Real-time inference via API
+A trained gradient-boosted model evaluates every lead on 4 dimensions — company size, budget, urgency, and AI interest — and outputs a score from 0–100 with a priority tier (High / Medium / Low).
 
-**Output:** Score (0-100), deal probability, priority tier
+### 📑 AI Proposal Generator
+Automatically generates a professional, scoped proposal based on the client's project description, budget, and timeline requirements.
 
-</td>
-</tr>
-<tr>
-<td width="50%">
+### 🎙️ Voice Input with Whisper
+Clients can describe their project by uploading an audio file. OpenAI Whisper transcribes it automatically and populates the description field — no typing required.
 
-### 📑 AI Proposal Generation
-Generates professional proposals based on:
-- Client requirements & constraints
-- Project type & complexity
-- Industry-specific context
-- Budget-aligned recommendations
+### 🔗 LangGraph Workflow Orchestration
+The entire pipeline — receive → classify → score → propose → finalize — runs as a structured AI agent graph using LangGraph with state management at each node.
 
-**Output:** Complete proposal with scope, timeline, pricing
-
-</td>
-<td width="50%">
-
-### 🔗 Workflow Automation Builder
-Visual automated pipelines (n8n / Zapier style):
-- Lead capture → AI classification
-- Scoring → Proposal generation
-- CRM integration → Email automation
-- Configurable multi-step workflows
-
-**Output:** Orchestrated automation pipeline
-
-</td>
-</tr>
-<tr>
-<td colspan="2">
+### 📡 Real-Time WebSocket Streaming
+Every stage of the workflow streams back to the frontend in real-time via WebSockets, so users see live progress instead of waiting for a full response.
 
 ### 📊 Business Analytics Dashboard
-Agency-level intelligence powered by **Streamlit + Plotly**:
-- Lead funnel visualization & conversion tracking
-- Revenue forecasting & budget analysis
-- Lead ranking with AI confidence scores
-- System health monitoring & performance metrics
+Full agency dashboard with lead funnel, revenue forecasting, budget vs score scatter plot, model comparison radar chart, and AI agent activity log.
 
-</td>
-</tr>
-</table>
+### 🗂️ RAG-Powered Context
+FAISS vector index stores agency knowledge documents. The proposal generator retrieves relevant context before generating — ensuring outputs are grounded in real agency capabilities.
 
 ---
 
-## 🏗 System Architecture
+## 🏗️ System Architecture
 
 ```mermaid
 graph TD
-    A[🖥 Web Form] --> D[⚡ FastAPI Backend]
-    B[📡 API Client] --> D
-    C[📊 Streamlit Dashboard] --> D
-    
-    D --> E[🤖 AI Analyzer]
-    D --> F[🧠 ML Lead Scoring]
-    D --> G[📑 Proposal Generator]
-    
-    E --> H[📂 FAISS Vector Index]
-    F --> I[🎯 Trained Model - lead_model.pkl]
-    G --> J[📄 Training Data - training_data.csv]
-    
-    style A fill:#4CAF50,color:#fff
-    style B fill:#4CAF50,color:#fff
-    style C fill:#4CAF50,color:#fff
-    style D fill:#2196F3,color:#fff
+    A[🖥️ Streamlit Dashboard] -->|REST + WebSocket| B[⚡ FastAPI Backend]
+    A -->|Audio Upload| C[🎙️ Whisper API]
+
+    B --> D[🧠 ML Scoring Engine]
+    B --> E[📑 Proposal Generator]
+    B --> F[🔗 LangGraph Orchestrator]
+    B --> G[🗂️ RAG Pipeline]
+
+    D --> H[lead_model.pkl]
+    E --> I[LLM Generation]
+    F --> J[StateGraph Nodes]
+    G --> K[FAISS Vector Index]
+
+    C -->|Transcription| A
+
+    style A fill:#FF4B4B,color:#fff
+    style B fill:#009688,color:#fff
+    style C fill:#6B46C1,color:#fff
+    style D fill:#FF9800,color:#fff
     style E fill:#FF9800,color:#fff
     style F fill:#FF9800,color:#fff
     style G fill:#FF9800,color:#fff
-    style H fill:#9C27B0,color:#fff
-    style I fill:#9C27B0,color:#fff
-    style J fill:#9C27B0,color:#fff
-
 ```
 
-## 🛠 Tech Stack
+### Workflow Pipeline
 
-### Backend & API
-| Technology | Purpose | Version |
-|-----------|---------|---------|
-| ![Python](https://img.shields.io/badge/Python-3776AB?style=flat-square&logo=python&logoColor=white) | Core Language | 3.10+ |
-| ![FastAPI](https://img.shields.io/badge/FastAPI-009688?style=flat-square&logo=fastapi&logoColor=white) | REST API Framework | 0.100+ |
-| ![Uvicorn](https://img.shields.io/badge/Uvicorn-121212?style=flat-square) | ASGI Server | 0.23+ |
-| ![Pydantic](https://img.shields.io/badge/Pydantic-E92063?style=flat-square&logo=pydantic&logoColor=white) | Data Validation | 2.0+ |
+```
+┌─────────────┐    ┌──────────────┐    ┌─────────────┐
+│ 📥 Lead     │───▶│ 🤖 AI        │───▶│ 🧠 ML       │
+│ Capture     │    │ Classification│    │ Scoring     │
+└─────────────┘    └──────────────┘    └──────┬──────┘
+                                               │
+                                               ▼
+┌─────────────┐    ┌──────────────┐    ┌─────────────┐
+│ 📧 Email    │◀───│ 🔗 CRM       │◀───│ 📑 Proposal │
+│ Automation  │    │ Integration  │    │ Generation  │
+└─────────────┘    └──────────────┘    └─────────────┘
+```
 
-### AI / Machine Learning
-| Technology | Purpose | Version |
-|-----------|---------|---------|
-| ![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-F7931E?style=flat-square&logo=scikit-learn&logoColor=white) | ML Lead Scoring | 1.3+ |
-| ![HuggingFace](https://img.shields.io/badge/HuggingFace-FFD21E?style=flat-square&logo=huggingface&logoColor=black) | LLM Integration | Latest |
-| ![PyTorch](https://img.shields.io/badge/PyTorch-EE4C2C?style=flat-square&logo=pytorch&logoColor=white) | Deep Learning Backend | 2.0+ |
-| ![FAISS](https://img.shields.io/badge/FAISS-005571?style=flat-square) | Vector Search (RAG) | Latest |
+---
 
-### Frontend & Visualization
-| Technology | Purpose | Version |
-|-----------|---------|---------|
-| ![Streamlit](https://img.shields.io/badge/Streamlit-FF4B4B?style=flat-square&logo=streamlit&logoColor=white) | Dashboard UI | 1.28+ |
-| ![Plotly](https://img.shields.io/badge/Plotly-3F4F75?style=flat-square&logo=plotly&logoColor=white) | Interactive Charts | 5.0+ |
+## 🛠️ Tech Stack
+
+### Backend
+| Tool | Role |
+|---|---|
+| **FastAPI** | REST API + WebSocket server |
+| **Uvicorn** | ASGI production server |
+| **LangGraph** | Multi-stage AI workflow orchestration |
+| **Pydantic** | Request/response validation |
+| **Python-multipart** | File upload handling |
+
+### AI / ML
+| Tool | Role |
+|---|---|
+| **Scikit-learn** | Gradient-boosted lead scoring model |
+| **FAISS** | Vector similarity search for RAG |
+| **OpenAI Whisper API** | Audio-to-text transcription |
+| **LangGraph StateGraph** | Agent node orchestration |
+| **Joblib** | Model serialization |
+
+### Frontend
+| Tool | Role |
+|---|---|
+| **Streamlit** | Interactive analytics dashboard |
+| **Plotly** | Charts — radar, funnel, scatter, histogram |
+| **WebSockets** | Real-time workflow streaming |
+
+### Infrastructure
+| Tool | Role |
+|---|---|
+| **Render** | Backend deployment (FastAPI) |
+| **Streamlit Cloud** | Frontend deployment |
+| **GitHub Actions** | CI/CD pipeline |
 
 ---
 
 ## 📂 Project Structure
 
-
-
-ai-agency-workflow-automation/
-
+```
+AI-Agency-Automation/
 │
-├── 🚀 app/                              # Backend Application
-
-│   ├── main.py                          # FastAPI entry point
-
+├── app/                              # FastAPI Backend
+│   ├── main.py                       # Entry point — all routes + WebSocket
 │   │
 │   ├── routes/
-│   │   └── lead_routes.py               # API endpoints for leads
+│   │   └── lead_routes.py            # /lead endpoint
 │   │
 │   ├── services/
-
-│   │   ├── lead_scoring_service.py      # ML scoring logic
-│   │   ├── proposal_generator.py        # AI proposal engine
-│   │   ├── ai_analyzer.py              # Lead analysis service
-│   │   ├── automation_service.py        # Workflow automation
-│   │   ├── cost_optimizer.py            # Cost optimization
-│   │   └── workflow_generator.py        # Workflow builder
+│   │   ├── lead_scoring_service.py   # ML model inference
+│   │   ├── proposal_generator.py     # AI proposal engine
+│   │   ├── transcription_service.py  # Whisper API integration
+│   │   ├── workflow_generator.py     # LangGraph orchestration
+│   │   ├── ai_analyzer.py            # Lead analysis logic
+│   │   ├── automation_service.py     # Workflow automation
+│   │   └── cost_optimizer.py         # Cost estimation
 │   │
-
 │   ├── models/
-
-│   │   ├── lead_schema.py              # Pydantic data models
-│   │   └── lead_model.py               # Lead data model
+│   │   ├── lead_schema.py            # Pydantic request/response models
+│   │   └── lead_model.py             # Lead data structure
 │   │
-
 │   ├── ml/
-│   │   ├── train_model.py              # Model training script
-│   │   └── lead_model.pkl              # Trained ML model
+│   │   ├── train_model.py            # Model training script
+│   │   └── lead_model.pkl            # Trained ML model (gradient boosted)
 │   │
-
 │   ├── rag/
-│   │   ├── knowledge_loader.py         # RAG document loader
-│   │   └── agency_docs.txt             # Knowledge base
+│   │   ├── knowledge_loader.py       # FAISS index builder
+│   │   └── agency_docs.txt           # Agency knowledge base
 │   │
-
-│   ├── config.py                        # App configuration
-│   └── database.py                      # Database connection
+│   ├── config.py                     # Environment config
+│   └── database.py                   # SQLite connection
 │
-
-├── 📊 dashboard/
-│   └── dashboard.py                     # Streamlit analytics UI
+├── dashboard/
+│   └── dashboard.py                  # Streamlit frontend
 │
-
-├── 📁 data/
-│   ├── training_data.csv                # Training dataset
-│   └── leads.db                         # SQLite database
+├── data/
+│   ├── training_data.csv             # ML training dataset
+│   └── leads.db                      # SQLite lead database
 │
-
-├── 🎬 demo/
-│   └── demo_leads.json                  # Sample lead data
-│
-
-├── 🔗 workflows/
-│   └── n8n_workflow.json                # n8n automation workflow
-│
-
-├── 📁 .github/
-│   └── workflows/
-│       └── ci.yml                       # CI/CD pipeline
-│
-
-├── requirements.txt                      # Python dependencies
-├── run.sh                               # Startup script
-├── .gitignore                           # Git ignore rules
-├── LICENSE                              # MIT License
-└── README.md                            # Documentation
-
-
-> **Total Files:** 25+ | **Languages:** Python | **Framework:** FastAPI + Streamlit
+├── requirements.txt                  # Dependencies
+├── render.yaml                       # Render deployment config
+└── README.md
+```
 
 ---
 
 ## 🚀 Getting Started
 
 ### Prerequisites
+- Python 3.10+
+- OpenAI API key (for Whisper transcription)
 
-- **Python 3.10+**
-- **pip** (package manager)
-- **Git**
-
-### Installation
-
-#### 1️⃣ Clone the Repository
+### 1. Clone & Install
 
 ```bash
-git clone https://github.com/yourusername/ai-agency-workflow-automation.git
-cd ai-agency-workflow-automation
-
-2️⃣ Create Virtual Environment
-bash
-
-Copy code
+git clone https://github.com/debasmita30/AI-Agency-Automation.git
+cd AI-Agency-Automation
 python -m venv venv
-
-# Windows
-venv\Scripts\activate
-
-# macOS / Linux
-source venv/bin/activate
-
-3️⃣ Install Dependencies
-bash
-
-Copy code
+source venv/bin/activate  # Windows: venv\Scripts\activate
 pip install -r requirements.txt
+```
 
-4️⃣ Train the ML Model
-bash
+### 2. Set Environment Variables
 
-Copy code
+Create a `.env` file:
+```
+OPENAI_API_KEY=sk-your-key-here
+```
+
+### 3. Train the ML Model
+
+```bash
 python app/ml/train_model.py
+```
 
-✅ This generates lead_model.pkl used for real-time scoring.
+### 4. Start the Backend
 
-5️⃣ Start the Backend API
-bash
-
-Copy code
+```bash
 uvicorn app.main:app --reload
+```
+API live at: `http://localhost:8000` | Docs: `http://localhost:8000/docs`
 
-🟢 API available at: http://127.0.0.1:8000
-📖 Swagger Docs: http://127.0.0.1:8000/docs
+### 5. Launch the Dashboard
 
-6️⃣ Launch the Dashboard
-bash
-
-Copy code
+```bash
 streamlit run dashboard/dashboard.py
+```
+Dashboard live at: `http://localhost:8501`
 
-🟢 Dashboard available at: http://localhost:8501
+---
 
-📡 API Reference
-Analyze Lead
-http
+## 📡 API Reference
 
-Copy code
-POST /api/leads/analyze
-
-Request Body
-json
-
-Copy code
+### Score a Lead
+```http
+POST /lead
+```
+```json
 {
-  "company_name": "TechCorp AI",
-  "contact_email": "john@techcorp.com",
-  "project_type": "AI Chatbot",
-  "budget": 50000,
-  "urgency": "high",
-  "company_size": 150,
-  "ai_interest_level": 9,
-  "description": "Need an AI-powered customer service chatbot with RAG capabilities"
+  "name": "Alex Morgan",
+  "email": "alex@startup.com",
+  "company_size": 25,
+  "budget": 8000,
+  "urgency": 2,
+  "ai_interest": 1,
+  "description": "We need AI automation for lead qualification integrated with HubSpot."
 }
-
-Response
-json
-
-Copy code
+```
+**Response:**
+```json
 {
-  "status": "success",
-  "data": {
-    "lead_score": 84.5,
-    "priority": "High",
-    "confidence": 0.94,
-    "deal_probability": 0.78,
-    "recommended_action": "Immediate follow-up",
-    "proposal": {
-      "title": "AI Chatbot Development Proposal for TechCorp AI",
-      "scope": "...",
-      "timeline": "8-10 weeks",
-      "estimated_cost": "\$45,000 - \$55,000"
-    }
-  }
+  "lead_score": 84.5,
+  "priority": "High",
+  "confidence": 0.94,
+  "proposal": "..."
 }
+```
 
-📊 Dashboard Preview
+### Transcription Status
+```http
+GET /transcription/status
+```
+
+### Transcribe Audio
+```http
+POST /transcription/transcribe
+Content-Type: multipart/form-data
+file: audio.wav
+```
+
+### WebSocket Stream
+```
+WS /ws/lead
+```
+Streams 4 stages: `received` → `scored` → `proposed` → `complete`
+
+### Health Check
+```http
+GET /health
+```
+
+---
+
+## 📊 Dashboard Screenshots
+
+> **Analytics Overview**
+
+<!-- Add screenshot here -->
+&nbsp;
+
+> **Lead Scoring + Model Radar**
+
+<!-- Add screenshot here -->
+&nbsp;
+
+> **Workflow Pipeline**
+
+<!-- Add screenshot here -->
+&nbsp;
+
+> **Voice Input (Whisper)**
+
+<!-- Add screenshot here -->
+&nbsp;
+
+> **Revenue Forecast**
+
+<!-- Add screenshot here -->
+
+---
+
+## 📈 Performance
+
+| Metric | Value |
+|---|---|
+| Lead scoring inference | < 50ms |
+| Proposal generation | < 3 seconds |
+| Audio transcription | ~5-10 seconds |
+| API uptime | 99.5% |
+| Dashboard load time | < 2 seconds |
+
+---
+
+## 🗺️ Roadmap
+
+- [x] ML Lead Scoring Engine
+- [x] AI Proposal Generation
+- [x] FastAPI Backend + REST API
+- [x] Streamlit Analytics Dashboard
+- [x] LangGraph Workflow Orchestration
+- [x] WebSocket Real-time Streaming
+- [x] Whisper Voice Transcription
+- [x] FAISS RAG Pipeline
+- [ ] HubSpot / Salesforce CRM Integration
+- [ ] Docker Containerization
+- [ ] Multi-tenant Role-based Access Control
+- [ ] Email automation via SendGrid
+
+---
+
+## 👩‍💻 Author
+
 <div align="center">
-Analytics Overview	Lead Funnel
-📈 Revenue forecasting & trends	🔄 Conversion pipeline tracking
-Workflow Builder	Lead Scoring
-⚡ Automated pipeline visualization	🎯 ML-powered scoring results
+
+**Debasmita Chatterjee**
+
+AI/ML Engineer • LLM Systems • Generative AI • Automation
+
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?style=flat-square&logo=linkedin)](https://www.linkedin.com/in/debasmita-chatterjee/)
+[![GitHub](https://img.shields.io/badge/GitHub-Follow-181717?style=flat-square&logo=github)](https://github.com/debasmita30)
+[![Portfolio](https://img.shields.io/badge/Portfolio-Visit-FF6B6B?style=flat-square)](https://leafy-cajeta-9270ea.netlify.app/)
+
 </div>
-Key Metrics at a Glance
-Metric	Sample Value	Description
-🎯 Lead Score	84.5 / 100	ML-predicted lead quality
-📊 Deal Probability	78%	Likelihood of conversion
-⚡ Priority	High	Auto-classified urgency tier
-🔒 Confidence	94%	Model prediction confidence
-💰 Revenue Forecast	$75,000	Projected pipeline value
-📈 Predicted Deals	15	Expected conversions this month
-🔗 Workflow Pipeline
-markdown
 
-Copy code
-┌──────────────┐     ┌──────────────┐     ┌──────────────┐
-│              │     │              │     │              │
-│  📥 Lead     │────▶│  🤖 AI       │────▶│  🧠 ML       │
-│  Capture     │     │  Classification    │  Scoring     │
-│              │     │              │     │              │
-└──────────────┘     └──────────────┘     └──────┬───────┘
-                                                  │
-                                                  ▼
-┌──────────────┐     ┌──────────────┐     ┌──────────────┐
-│              │     │              │     │              │
-│  📧 Email    │◀────│  🔗 CRM      │◀────│  📑 Proposal │
-│  Automation  │     │  Integration │     │  Generation  │
-│              │     │              │     │              │
-└──────────────┘     └──────────────┘     └──────────────┘
+---
 
-Each step is automated — no manual intervention required.
+## 📄 License
 
-🗺 Roadmap
- ML Lead Scoring Engine
- AI Proposal Generation
- FastAPI Backend
- Streamlit Analytics Dashboard
- Workflow Pipeline Visualization
- 🔲 Drag-and-drop Workflow Builder (n8n style)
- 🔲 CRM Integrations (HubSpot / Salesforce)
- 🔲 LLM Cost Optimization Engine
- 🔲 Docker Containerization
- 🔲 Multi-Agent Orchestration (CrewAI / LangGraph)
- 🔲 Real-time WebSocket Updates
- 🔲 Role-based Access Control
-🤝 Contributing
-Contributions are welcome! Here's how:
+This project is licensed under the MIT License.
 
-Fork the repository
-Create a feature branch (git checkout -b feature/amazing-feature)
-Commit changes (git commit -m 'Add amazing feature')
-Push to branch (git push origin feature/amazing-feature)
-Open a Pull Request
-👩‍💻 Author
+---
+
 <div align="center">
-Debasmita Chatterjee
-AI / ML Engineer — Generative AI • LLM Systems • AI Automation
+
+⭐ **If this project helped you, give it a star!**
+
+Built with 🤖 ML + ⚡ FastAPI + 🎙️ Whisper + 🔗 LangGraph
+
+</div>
