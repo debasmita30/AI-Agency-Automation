@@ -6,4 +6,7 @@ python-dotenv==1.0.1
 langgraph>=0.1.0
 websockets>=11.0
 openai-whisper>=20231117
+uvicorn>=0.23.0
+fastapi>=0.100.0
+
 
