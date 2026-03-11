@@ -43,6 +43,35 @@ def check_backend():
     except Exception:
         return False, "N/A"
 
+# ---- ADDED: Whisper status check ----
+def check_whisper():
+    """Check if Whisper transcription is available"""
+    try:
+        response = requests.get(f"{API_BASE}/transcription/status", timeout=5)
+        if response.status_code == 200:
+            return response.json().get("available", False)
+        return False
+    except Exception:
+        return False
+
+# ---- ADDED: Whisper transcription call ----
+def transcribe_audio_api(audio_file) -> tuple:
+    """Send audio file to Whisper transcription endpoint"""
+    try:
+        response = requests.post(
+            f"{API_BASE}/transcription/transcribe",
+            files={"file": (audio_file.name, audio_file.read(), audio_file.type)},
+            timeout=60
+        )
+        if response.status_code == 200:
+            result = response.json()
+            if result.get("status") == "success":
+                return result.get("transcription", ""), None
+            return "", result.get("message", "Transcription failed")
+        return "", f"Server error: {response.status_code}"
+    except Exception as e:
+        return "", str(e)
+
 def fallback_lead_scoring(payload):
     """Local fallback scoring when backend is offline"""
     budget = payload.get("budget", 5000)
@@ -146,7 +175,7 @@ st.markdown("""
 
 st.title("AI Agency Workflow Automation Platform")
 
-# ---------------- LIVE AI SYSTEM STATUS ----------------
+
 
 st.markdown("### 🔮 AI System Status")
 
@@ -154,6 +183,8 @@ c1, c2, c3, c4 = st.columns(4)
 
 
 backend_online, latency = check_backend()
+
+whisper_available = check_whisper() if backend_online else False
 backend_status = "Running" if backend_online else "Offline"
 
 model_accuracy = str(round(random.uniform(89, 94), 2)) + "%"
@@ -166,7 +197,8 @@ c3.metric("Workflow Agents Active", active_agents)
 c4.metric("Backend API Latency (ms)", latency)
 
 
-status_col1, status_col2, status_col3 = st.columns(3)
+
+status_col1, status_col2, status_col3, status_col4 = st.columns(4)
 with status_col1:
     if backend_online:
         st.success("🟢 Backend API: Online")
@@ -176,6 +208,11 @@ with status_col2:
     st.success("🟢 ML Pipeline: Active")
 with status_col3:
     st.success("🟢 RAG Engine: Ready")
+with status_col4:
+    if whisper_available:
+        st.success("🟢 Whisper: Ready")
+    else:
+        st.warning("🟡 Whisper: Offline")
 
 if not backend_online:
     st.info("ℹ️ Running in standalone mode — All AI features work locally without backend. Deploy backend on Render for full API access.")
@@ -202,6 +239,10 @@ if "name" not in st.session_state:
     st.session_state.urgency = 1
     st.session_state.ai_interest = 0
     st.session_state.description = ""
+
+# ---- ADDED: transcribed_text session state ----
+if "transcribed_text" not in st.session_state:
+    st.session_state.transcribed_text = ""
 
 b1, b2 = st.columns(2)
 
@@ -239,20 +280,57 @@ with c2:
         format_func=lambda x: "Yes" if x == 1 else "No"
     )
 
-description = st.text_area("Project Description", key="description")
+
+st.markdown("**Project Description**")
+audio_tab, text_tab = st.tabs(["🎙️ Voice Input (Whisper)", "✍️ Type Manually"])
+
+with audio_tab:
+    if not whisper_available:
+        st.warning("⚠️ Whisper transcription is currently unavailable. Use text input or check backend status.")
+    else:
+        st.caption("Upload an audio file describing your project — Whisper will transcribe it automatically.")
+
+    audio_file = st.file_uploader(
+        "Upload audio (wav, mp3, m4a, ogg)",
+        type=["wav", "mp3", "m4a", "ogg"],
+        disabled=not whisper_available
+    )
+
+    if audio_file is not None:
+        st.audio(audio_file)
+        if st.button("🎙️ Transcribe with Whisper"):
+            with st.spinner("Transcribing audio..."):
+                audio_file.seek(0)
+                text, error = transcribe_audio_api(audio_file)
+                if error:
+                    st.error(f"Transcription failed: {error}")
+                else:
+                    st.session_state.transcribed_text = text
+                    st.session_state.description = text
+                    st.success("✅ Transcription complete — description updated!")
+                    st.info(f"📝 **Transcribed:** {text}")
+
+with text_tab:
+    description = st.text_area(
+        "Describe your project",
+        value=st.session_state.get("transcribed_text", st.session_state.get("description", "")),
+        height=150,
+        key="description"
+    )
+# ---- END ADDED ----
 
 # ---------------- ANALYZE ----------------
 
 if st.button("⚡ Analyze Lead"):
 
-    if not name or not email or not description:
+    if not name or not email or not st.session_state.get("description", ""):
         st.warning("Fill all fields or click 'Load Demo Data'")
         st.stop()
 
     payload = {
         "name": name,
         "email": email,
-        "description": description,
+        "description": st.session_state.get("description", ""),
         "company_size": company_size,
         "budget": budget,
         "urgency": urgency,
@@ -695,7 +773,7 @@ if selected_nodes:
 
     st.plotly_chart(fig, use_container_width=True)
 
-    # --- UPGRADED: Estimated pipeline metrics ---
+   
     st.markdown("#### ⚡ Pipeline Metrics")
     pm1, pm2, pm3 = st.columns(3)
     pm1.metric("Steps Selected", len(selected_nodes))
@@ -713,9 +791,6 @@ st.markdown(f"""
 <div style='text-align: center; color: #666; padding: 20px;'>
     <p>🚀 <b>AI Agency Workflow Automation Platform</b> | Built with Streamlit + FastAPI + ML</p>
     <p style='font-size: 0.8rem;'>Real-time AI-powered lead scoring, workflow automation, and intelligent proposal generation</p>
-    <p style='font-size: 0.7rem; color: #888;'>API: {API_BASE} | Mode: {"🟢 Online" if backend_online else "🟡 Local"}</p>
+    <p style='font-size: 0.7rem; color: #888;'>API: {API_BASE} | Mode: {"🟢 Online" if backend_online else "🟡 Local"} | Whisper: {"🟢 Ready" if whisper_available else "🟡 Offline"}</p>
 </div>
 """, unsafe_allow_html=True)
-
-
-
