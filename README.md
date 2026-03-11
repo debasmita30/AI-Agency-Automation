@@ -12,8 +12,11 @@
 
 <br/>
 
-> **Built for AI agencies that waste hours manually scoring leads, writing proposals, and managing client workflows.**
-> This platform automates it all — end to end.
+<div align="center">
+
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&size=22&duration=3000&pause=800&color=00D4FF&center=true&vCenter=true&multiline=false&width=700&lines=AI+agencies+waste+hours+qualifying+leads...;This+platform+does+it+in+seconds.;Client+submits+a+form+%E2%86%92+ML+scores+it+instantly;AI+writes+the+proposal+automatically;6+automated+stages%2C+zero+manual+work;Built+for+agencies+that+move+fast+%F0%9F%9A%80)](https://git.io/typing-svg)
+
+</div>
 
 <br/>
 
