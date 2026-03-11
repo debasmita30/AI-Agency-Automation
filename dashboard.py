@@ -317,7 +317,7 @@ with text_tab:
         height=150,
         key="description"
     )
-# ---- END ADDED ----
+
 
 # ---------------- ANALYZE ----------------
 
@@ -385,7 +385,7 @@ if st.button("⚡ Analyze Lead"):
         m3.metric("Cost", model["cost"])
         m4.metric("Latency", model["latency"])
 
-        # --- UPGRADED: Model Comparison Radar Chart ---
+        
         st.subheader("📡 Model Comparison Radar")
         models_compare = ["Mistral 7B", "Llama 3 8B", "GPT-4o"]
         accuracy_vals = [90, 92, 96]
@@ -454,7 +454,7 @@ if st.button("⚡ Analyze Lead"):
     st.progress(confidence_display)
     st.write(f"Confidence: {round(confidence_display * 100, 2)}%")
 
-    # --- UPGRADED: Confidence Breakdown ---
+   
     st.markdown("#### Confidence Breakdown by Feature")
     conf_data = pd.DataFrame({
         "Feature": ["Company Size", "Budget", "Urgency", "AI Interest", "Description NLP"],
@@ -483,7 +483,7 @@ if st.button("⚡ Analyze Lead"):
 
     k1, k2, k3, k4 = st.columns(4)
     k1.metric("Lead Score", score, delta=f"{round(random.uniform(-5, 10), 1)}")
-    k2.metric("Priority", priority)
+    k2.metric("Priority", "High" if score > 75 else "Medium" if score > 60 else "Low")
     k3.metric("Budget", f"${budget}", delta=f"{round(random.uniform(-500, 1000), 0)}")
     k4.metric("Company Size", company_size)
 
@@ -535,7 +535,7 @@ if st.button("⚡ Analyze Lead"):
     c3.metric("Annual LLM Cost", f"${annual_cost}")
     c4.metric("Estimated Annual ROI", f"${roi_estimate:,}")
 
-    # --- UPGRADED: Cost Over Time Chart ---
+    
     months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
     monthly_costs = [round(estimated_cost * random.uniform(0.7, 1.3), 2) for _ in months]
     monthly_revenue = [round(budget * random.uniform(0.8, 1.5), 2) for _ in months]
@@ -666,7 +666,7 @@ if st.button("⚡ Analyze Lead"):
     )
     st.plotly_chart(fig, use_container_width=True)
 
-    # --- UPGRADED: Lead Score Distribution ---
+    -
     st.subheader("📉 Lead Score Distribution")
     dist_data = [random.gauss(score, 10) for _ in range(200)]
     dist_fig = px.histogram(
@@ -684,7 +684,7 @@ if st.button("⚡ Analyze Lead"):
     )
     st.plotly_chart(dist_fig, use_container_width=True)
 
-    # --- UPGRADED: AI Agent Activity Log ---
+  
     st.subheader("🤖 AI Agent Activity Log")
     agent_log = pd.DataFrame({
         "Timestamp": pd.date_range(end=pd.Timestamp.now(), periods=8, freq="15min").strftime("%H:%M:%S"),
@@ -721,7 +721,7 @@ workflow_order = {
     "Chatbot Deployment": 8
 }
 
-# --- UPGRADED: Workflow step descriptions ---
+
 workflow_descriptions = {
     "Lead Capture": "Capture incoming leads from web forms, APIs, and integrations",
     "AI Classification": "NLP-powered classification of lead intent and project type",
@@ -741,7 +741,7 @@ if selected_nodes:
 
     selected_nodes = sorted(selected_nodes, key=lambda x: workflow_order[x])
 
-    # Show descriptions for selected steps
+
     st.markdown("#### 📝 Selected Step Details")
     for i, node in enumerate(selected_nodes):
         st.markdown(f"**{i + 1}. {node}** — {workflow_descriptions[node]}")
