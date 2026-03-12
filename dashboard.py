@@ -666,7 +666,7 @@ if st.button("⚡ Analyze Lead"):
     )
     st.plotly_chart(fig, use_container_width=True)
 
-    -
+    
     st.subheader("📉 Lead Score Distribution")
     dist_data = [random.gauss(score, 10) for _ in range(200)]
     dist_fig = px.histogram(
