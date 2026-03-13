@@ -1,26 +1,22 @@
 <div align="center">
 
-# 🚀 AI Agency Workflow Automation Platform
+# ⚙️ GoQueue — Background Job Processing Engine
 
-### From Lead to Proposal in Seconds — Powered by ML + AI
+### Never Make Your Users Wait Again — Background Jobs at Scale
 
-[![Python](https://img.shields.io/badge/Python-3.10+-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org)
-[![FastAPI](https://img.shields.io/badge/FastAPI-Backend-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
-[![Streamlit](https://img.shields.io/badge/Streamlit-Dashboard-FF4B4B?style=flat-square&logo=streamlit&logoColor=white)](https://streamlit.io)
-[![LangGraph](https://img.shields.io/badge/LangGraph-Orchestration-6B46C1?style=flat-square)](https://langchain-ai.github.io/langgraph/)
-[![Live Demo](https://img.shields.io/badge/Live-Demo-00C851?style=flat-square&logo=render&logoColor=white)](https://ai-agency-automation-h.streamlit.app/)
-
-<br/>
-
-<div align="center">
-
-[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&size=22&duration=3000&pause=800&color=00D4FF&center=true&vCenter=true&multiline=false&width=700&lines=AI+agencies+waste+hours+qualifying+leads...;This+platform+does+it+in+seconds.;Client+submits+a+form+%E2%86%92+ML+scores+it+instantly;AI+writes+the+proposal+automatically;6+automated+stages%2C+zero+manual+work;Built+for+agencies+that+move+fast+%F0%9F%9A%80)](https://git.io/typing-svg)
-
-</div>
+[![Go](https://img.shields.io/badge/Go-1.23-00ADD8?style=flat-square&logo=go&logoColor=white)](https://go.dev)
+[![Gin](https://img.shields.io/badge/Gin-Framework-00ADD8?style=flat-square&logo=go&logoColor=white)](https://gin-gonic.com)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-336791?style=flat-square&logo=postgresql&logoColor=white)](https://postgresql.org)
+[![Docker](https://img.shields.io/badge/Docker-Containerized-2496ED?style=flat-square&logo=docker&logoColor=white)](https://docker.com)
+[![Live Demo](https://img.shields.io/badge/Live-Demo-00C851?style=flat-square&logo=render&logoColor=white)](https://lovely-marigold-29675d.netlify.app)
 
 <br/>
 
-🌐 **[Live Dashboard](https://ai-agency-automation-h.streamlit.app/)** &nbsp;|&nbsp; ⚡ **[Backend API](https://ai-agency-automation.onrender.com)** &nbsp;|&nbsp; 📖 **[API Docs](https://ai-agency-automation.onrender.com/docs)**
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&size=20&duration=3000&pause=800&color=00FF88&center=true&vCenter=true&multiline=false&width=750&lines=APIs+shouldn't+block+on+slow+tasks...;GoQueue+handles+them+in+the+background.;5+goroutines+processing+jobs+in+parallel;PostgreSQL-backed+%E2%80%94+zero+job+loss+guaranteed;Auto-retry+with+exponential+backoff;Priority+queues+%2B+dead+letter+support+%F0%9F%9A%80)](https://git.io/typing-svg)
+
+<br/>
+
+🌐 **[Live Demo](https://lovely-marigold-29675d.netlify.app)** &nbsp;|&nbsp; ⚙️ **[API Health](https://go-job-queue.onrender.com/health)** &nbsp;|&nbsp; 📊 **[Live Stats](https://go-job-queue.onrender.com/api/v1/stats)** &nbsp;|&nbsp; 💻 **[Source Code](https://github.com/debasmita30/go-job-queue)**
 
 </div>
 
@@ -28,323 +24,306 @@
 
 ## 🧠 What Is This?
 
-Imagine you run an AI agency. Every day you get 20+ leads asking about automation, chatbots, and AI solutions. You have to:
+Imagine you run an e-commerce platform. When a customer places an order, your app needs to:
 
-- Manually read each inquiry
-- Decide if they're worth pursuing
-- Write a custom proposal for each one
-- Track everything across spreadsheets
+- Send a confirmation email
+- Update inventory levels
+- Ping the warehouse system
+- Deliver a webhook to your CRM
+- Generate a PDF receipt
 
-**This platform does all of that automatically in seconds.**
+**If you do all of this synchronously**, the customer waits 10+ seconds. If anything fails, the whole request fails.
 
-A potential client fills out a form → the system scores their lead quality using ML → classifies their project type → generates a tailored proposal → and streams the entire workflow in real-time.
+**GoQueue solves this.** It accepts the task instantly, returns a response to the user in milliseconds, and processes everything in the background using concurrent Go goroutines — with automatic retries if anything goes wrong.
 
 ---
 
-## 🎯 The Problem
+## 🎯 The Problem vs Solution
 
-| Without This Platform | With This Platform |
+| Without a Job Queue | With GoQueue |
 |---|---|
-| ⏳ 2-3 hours per lead evaluation | ⚡ Instant ML scoring |
-| 📝 Proposals written from scratch | 🤖 Auto-generated professional proposals |
-| 🤷 Gut-feel prioritization | 📊 Data-driven lead ranking |
-| 🔧 Scattered tools, no workflow | 🔗 End-to-end automated pipeline |
-| 🎙️ No voice input support | 🎙️ Whisper audio transcription |
+| ⏳ API blocks until slow task completes | ⚡ Returns instantly — job queued in < 1ms |
+| 💥 One failure crashes the whole request | 🔁 Auto-retry with exponential backoff |
+| 🗑️ Failed tasks silently disappear | 💀 Dead letter queue captures every failure |
+| 🐌 Tasks processed one at a time | ⚡ 5 goroutines run jobs in true parallel |
+| 📭 No visibility into task status | 📊 Real-time stats + job lifecycle tracking |
+| 🔄 No prioritization | 🎯 Priority 1–3 — urgent jobs jump the queue |
 
 ---
 
-## ✨ What It Does 
+## ✨ How It Works
 
 ```
-Client fills form  →  AI reads it  →  ML scores the lead (0-100)
-→  Generates proposal  →  Shows analytics  →  Done in < 5 seconds
+Client hits POST /api/v1/jobs  →  Job saved to PostgreSQL instantly
+→  Worker picks it up  →  Processes in goroutine
+→  Succeeds: marked complete  |  Fails: retried with backoff
+→  Max retries hit: moved to dead letter queue
 ```
 
-**6 automated stages, zero manual work.**
+**6-step job lifecycle — fully automatic, zero manual intervention.**
 
 ---
 
-## 🔥 Key Features
-
-### 🧠 ML Lead Scoring Engine
-A trained gradient-boosted model evaluates every lead on 4 dimensions — company size, budget, urgency, and AI interest — and outputs a score from 0–100 with a priority tier (High / Medium / Low).
-
-### 📑 AI Proposal Generator
-Automatically generates a professional, scoped proposal based on the client's project description, budget, and timeline requirements.
-
-### 🎙️ Voice Input with Whisper
-Clients can describe their project by uploading an audio file. OpenAI Whisper transcribes it automatically and populates the description field — no typing required.
-
-### 🔗 LangGraph Workflow Orchestration
-The entire pipeline — receive → classify → score → propose → finalize — runs as a structured AI agent graph using LangGraph with state management at each node.
-
-### 📡 Real-Time WebSocket Streaming
-Every stage of the workflow streams back to the frontend in real-time via WebSockets, so users see live progress instead of waiting for a full response.
-
-### 📊 Business Analytics Dashboard
-Full agency dashboard with lead funnel, revenue forecasting, budget vs score scatter plot, model comparison radar chart, and AI agent activity log.
-
-### 🗂️ RAG-Powered Context
-FAISS vector index stores agency knowledge documents. The proposal generator retrieves relevant context before generating — ensuring outputs are grounded in real agency capabilities.
-
----
-
-## 🏗️ System Architecture
-
-```mermaid
-graph TD
-    A[🖥️ Streamlit Dashboard] -->|REST + WebSocket| B[⚡ FastAPI Backend]
-    A -->|Audio Upload| C[🎙️ Whisper API]
-
-    B --> D[🧠 ML Scoring Engine]
-    B --> E[📑 Proposal Generator]
-    B --> F[🔗 LangGraph Orchestrator]
-    B --> G[🗂️ RAG Pipeline]
-
-    D --> H[lead_model.pkl]
-    E --> I[LLM Generation]
-    F --> J[StateGraph Nodes]
-    G --> K[FAISS Vector Index]
-
-    C -->|Transcription| A
-
-    style A fill:#FF4B4B,color:#fff
-    style B fill:#009688,color:#fff
-    style C fill:#6B46C1,color:#fff
-    style D fill:#FF9800,color:#fff
-    style E fill:#FF9800,color:#fff
-    style F fill:#FF9800,color:#fff
-    style G fill:#FF9800,color:#fff
-```
-
-### Workflow Pipeline
+## 🏗️ Architecture
 
 ```
-┌─────────────┐    ┌──────────────┐    ┌─────────────┐
-│ 📥 Lead     │───▶│ 🤖 AI        │───▶│ 🧠 ML       │
-│ Capture     │    │ Classification│    │ Scoring     │
-└─────────────┘    └──────────────┘    └──────┬──────┘
+┌─────────────────────────────────────────────────────────────────┐
+│                     CLIENT / FRONTEND                           │
+│              POST /api/v1/jobs  ·  GET /api/v1/stats            │
+└───────────────────────────┬─────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                  GIN HTTP SERVER + CORS                         │
+│         JobHandler · StatsHandler · HealthCheck                 │
+└───────────────────────────┬─────────────────────────────────────┘
+                            │
+                            ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                      DISPATCHER                                 │
+│   Persists job to PostgreSQL  ·  FOR UPDATE SKIP LOCKED         │
+└──────┬──────────┬──────────┬──────────┬──────────┬─────────────┘
+       │          │          │          │          │
+       ▼          ▼          ▼          ▼          ▼
+   Worker 0   Worker 1   Worker 2   Worker 3   Worker 4
+  (goroutine)(goroutine)(goroutine)(goroutine)(goroutine)
+       │
+       ├── ✅ Success → status: completed
+       │
+       └── ❌ Failure → exponential backoff retry
+                              │
+                    attempts >= max_attempts?
+                              │
+                              ▼
+                       💀 status: dead
+```
+
+### Job Lifecycle
+
+```
+[pending] ──► [processing] ──► [completed]
+                   │
+                   └──(error)──► [failed] ──(retry)──► [processing]
+                                               │
+                                     (max attempts hit)
                                                │
                                                ▼
-┌─────────────┐    ┌──────────────┐    ┌─────────────┐
-│ 📧 Email    │◀───│ 🔗 CRM       │◀───│ 📑 Proposal │
-│ Automation  │    │ Integration  │    │ Generation  │
-└─────────────┘    └──────────────┘    └─────────────┘
+                                            [dead]
 ```
 
 ---
 
-## 🛠️ Tech Stack
-
-### Backend
-| Tool | Role |
-|---|---|
-| **FastAPI** | REST API + WebSocket server |
-| **Uvicorn** | ASGI production server |
-| **LangGraph** | Multi-stage AI workflow orchestration |
-| **Pydantic** | Request/response validation |
-| **Python-multipart** | File upload handling |
-
-### AI / ML
-| Tool | Role |
-|---|---|
-| **Scikit-learn** | Gradient-boosted lead scoring model |
-| **FAISS** | Vector similarity search for RAG |
-| **OpenAI Whisper API** | Audio-to-text transcription |
-| **LangGraph StateGraph** | Agent node orchestration |
-| **Joblib** | Model serialization |
-
-### Frontend
-| Tool | Role |
-|---|---|
-| **Streamlit** | Interactive analytics dashboard |
-| **Plotly** | Charts — radar, funnel, scatter, histogram |
-| **WebSockets** | Real-time workflow streaming |
-
-### Infrastructure
-| Tool | Role |
-|---|---|
-| **Render** | Backend deployment (FastAPI) |
-| **Streamlit Cloud** | Frontend deployment |
-| **GitHub Actions** | CI/CD pipeline |
-
----
-
-## 📂 Project Structure
+## 📁 Project Structure
 
 ```
-AI-Agency-Automation/
+go-job-queue/
 │
-├── app/                              # FastAPI Backend
-│   ├── main.py                       # Entry point — all routes + WebSocket
+├── cmd/
+│   └── server/
+│       └── main.go                  # Entry point — starts HTTP server + worker pool
+│
+├── internal/
+│   ├── config/
+│   │   └── config.go                # Env config: DATABASE_URL, PORT, WORKER_COUNT
 │   │
-│   ├── routes/
-│   │   └── lead_routes.py            # /lead endpoint
-│   │
-│   ├── services/
-│   │   ├── lead_scoring_service.py   # ML model inference
-│   │   ├── proposal_generator.py     # AI proposal engine
-│   │   ├── transcription_service.py  # Whisper API integration
-│   │   ├── workflow_generator.py     # LangGraph orchestration
-│   │   ├── ai_analyzer.py            # Lead analysis logic
-│   │   ├── automation_service.py     # Workflow automation
-│   │   └── cost_optimizer.py         # Cost estimation
+│   ├── database/
+│   │   └── database.go              # PostgreSQL connection + schema migration
 │   │
 │   ├── models/
-│   │   ├── lead_schema.py            # Pydantic request/response models
-│   │   └── lead_model.py             # Lead data structure
+│   │   └── job.go                   # Job struct: id, type, status, payload, priority, error
 │   │
-│   ├── ml/
-│   │   ├── train_model.py            # Model training script
-│   │   └── lead_model.pkl            # Trained ML model (gradient boosted)
+│   ├── queue/
+│   │   ├── queue.go                 # Dispatcher — enqueue + fetch (SKIP LOCKED)
+│   │   └── worker.go                # Worker goroutines — process + retry logic
 │   │
-│   ├── rag/
-│   │   ├── knowledge_loader.py       # FAISS index builder
-│   │   └── agency_docs.txt           # Agency knowledge base
+│   ├── handlers/
+│   │   └── job_handler.go           # REST handlers: enqueue, list, get, stats
 │   │
-│   ├── config.py                     # Environment config
-│   └── database.py                   # SQLite connection
+│   └── router/
+│       └── router.go                # Gin router setup + CORS middleware
 │
-├── dashboard/
-│   └── dashboard.py                  # Streamlit frontend
+├── migrations/
+│   └── 001_create_jobs.sql          # PostgreSQL jobs table schema
 │
-├── data/
-│   ├── training_data.csv             # ML training dataset
-│   └── leads.db                      # SQLite lead database
-│
-├── requirements.txt                  # Dependencies
-├── render.yaml                       # Render deployment config
-└── README.md
+├── index.html                       # Live demo frontend (React CDN)
+├── Dockerfile                       # Multi-stage Docker build
+├── docker-compose.yml               # Local dev: app + PostgreSQL
+├── go.mod                           
+├── go.sum                           
+├── .env.example                     
+└── .gitignore                       
 ```
 
 ---
 
-## 🚀 Getting Started
-
-### Prerequisites
-- Python 3.10+
-- OpenAI API key (for Whisper transcription)
-
-### 1. Clone & Install
-
-```bash
-git clone https://github.com/debasmita30/AI-Agency-Automation.git
-cd AI-Agency-Automation
-python -m venv venv
-source venv/bin/activate  # Windows: venv\Scripts\activate
-pip install -r requirements.txt
-```
-
-### 2. Set Environment Variables
-
-Create a `.env` file:
-```
-OPENAI_API_KEY=sk-your-key-here
-```
-
-### 3. Train the ML Model
-
-```bash
-python app/ml/train_model.py
-```
-
-### 4. Start the Backend
-
-```bash
-uvicorn app.main:app --reload
-```
-API live at: `http://localhost:8000` | Docs: `http://localhost:8000/docs`
-
-### 5. Launch the Dashboard
-
-```bash
-streamlit run dashboard/dashboard.py
-```
-Dashboard live at: `http://localhost:8501`
-
----
-
-## 📡 API Reference
-
-### Score a Lead
-```http
-POST /lead
-```
-```json
-{
-  "name": "Alex Morgan",
-  "email": "alex@startup.com",
-  "company_size": 25,
-  "budget": 8000,
-  "urgency": 2,
-  "ai_interest": 1,
-  "description": "We need AI automation for lead qualification integrated with HubSpot."
-}
-```
-**Response:**
-```json
-{
-  "lead_score": 84.5,
-  "priority": "High",
-  "confidence": 0.94,
-  "proposal": "..."
-}
-```
-
-### Transcription Status
-```http
-GET /transcription/status
-```
-
-### Transcribe Audio
-```http
-POST /transcription/transcribe
-Content-Type: multipart/form-data
-file: audio.wav
-```
-
-### WebSocket Stream
-```
-WS /ws/lead
-```
-Streams 4 stages: `received` → `scored` → `proposed` → `complete`
+## 🚀 API Reference
 
 ### Health Check
 ```http
 GET /health
 ```
+```json
+{ "status": "healthy", "service": "go-job-queue", "version": "1.0.0" }
+```
 
 ---
 
-## 📊 Dashboard Screenshots
+### Enqueue a Job
+```http
+POST /api/v1/jobs
+Content-Type: application/json
+```
+```json
+{
+  "type": "send_email",
+  "payload": { "to": "user@example.com", "subject": "Order Confirmed!" },
+  "priority": 3,
+  "max_attempts": 3
+}
+```
+**Response:**
+```json
+{
+  "job": {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "type": "send_email",
+    "status": "pending",
+    "priority": 3,
+    "attempts": 0,
+    "max_attempts": 3,
+    "created_at": "2026-03-13T09:43:27Z"
+  }
+}
+```
 
->  **AI System Status**
-<img width="1918" height="863" alt="image" src="https://github.com/user-attachments/assets/1b460d9a-fea0-4d98-86c3-f31abe293f8b" />
+---
 
+### List Jobs
+```http
+GET /api/v1/jobs?status=pending&limit=20
+```
 
-> **Analytics Overview**
+| Param | Options | Default |
+|---|---|---|
+| `status` | `pending` `processing` `completed` `failed` `dead` | all |
+| `limit` | 1–100 | 20 |
+
+---
+
+### Queue Statistics
+```http
+GET /api/v1/stats
+```
+```json
+{
+  "total_jobs": 142,
+  "pending_jobs": 3,
+  "processing_jobs": 2,
+  "completed_jobs": 134,
+  "failed_jobs": 1,
+  "dead_jobs": 2
+}
+```
+
+---
+
+## ⚙️ Supported Job Types
+
+| Type | Payload | Description |
+|---|---|---|
+| `send_email` | `to`, `subject`, `body` | Background email delivery |
+| `generate_report` | `report_type`, `format` | Async report generation |
+| `webhook_delivery` | `url`, `event`, `data` | Reliable webhook dispatch |
+
+---
+
+## 🔁 Retry Logic
+
+GoQueue uses **exponential backoff** — failed jobs wait longer between each retry to avoid hammering downstream services:
+
+```
+Attempt 1 fails → wait 30s  → retry
+Attempt 2 fails → wait 60s  → retry  
+Attempt 3 fails → wait 90s  → marked DEAD (moved to dead letter queue)
+```
+
+Workers use PostgreSQL's `FOR UPDATE SKIP LOCKED` — a battle-tested pattern that prevents two workers from ever picking the same job, even at high concurrency.
+
+---
+
+## 📸 Screenshots
+
+> **Live Dashboard — Server Online**
 
 <!-- Add screenshot here -->
 &nbsp;
 
-> **Lead Scoring + Model Radar**
+> **Real-time Queue Stats**
 
 <!-- Add screenshot here -->
 &nbsp;
 
-> **Workflow Pipeline**
+> **Job Submission Form + Demo Scenarios**
 
 <!-- Add screenshot here -->
 &nbsp;
 
-> **Voice Input (Whisper)**
+> **Jobs Table with Status Badges**
 
 <!-- Add screenshot here -->
 &nbsp;
 
-> **Revenue Forecast**
+---
 
-<!-- Add screenshot here -->
+## 🛠️ Tech Stack
+
+| Layer | Technology | Purpose |
+|---|---|---|
+| Language | Go 1.23 | Performance + goroutines |
+| HTTP Framework | Gin | REST API + routing |
+| Database | PostgreSQL 15 | Persistent job storage |
+| Concurrency | Goroutines + Channels | Parallel worker pool |
+| Containerization | Docker (multi-stage) | Reproducible builds |
+| Cloud | Render | Production deployment |
+| Frontend | React (CDN) | Live demo dashboard |
+
+---
+
+## 🖥️ Running Locally
+
+### With Docker Compose (recommended)
+```bash
+git clone https://github.com/debasmita30/go-job-queue
+cd go-job-queue
+cp .env.example .env
+docker-compose up --build
+```
+
+### Without Docker
+```bash
+# Requires Go 1.23+ and a running PostgreSQL instance
+export DATABASE_URL=postgres://postgres:password@localhost:5432/jobqueue?sslmode=disable
+export WORKER_COUNT=5
+export PORT=8080
+go run ./cmd/server
+```
+
+API live at `http://localhost:8080` · Try `GET /health` to verify.
+
+---
+
+## 💡 Real-World Parallels
+
+GoQueue implements the same architecture patterns used by job queues at scale in production:
+
+| Library | Language | Used By |
+|---|---|---|
+| **Sidekiq** | Ruby | GitHub, Shopify, Gitlab |
+| **Celery** | Python | Instagram, Mozilla, Zapier |
+| **BullMQ** | Node.js | Netlify, Linear |
+| **Faktory** | Language-agnostic | Creator of Sidekiq |
+
+Core patterns implemented: persistent job storage, concurrent worker pool, retry with exponential backoff, dead letter queue, priority scheduling.
 
 ---
 
@@ -352,28 +331,30 @@ GET /health
 
 | Metric | Value |
 |---|---|
-| Lead scoring inference | < 50ms |
-| Proposal generation | < 3 seconds |
-| Audio transcription | ~5-10 seconds |
-| API uptime | 99.5% |
-| Dashboard load time | < 2 seconds |
+| Job enqueue latency | < 5ms |
+| Worker poll interval | 1 second |
+| Max concurrent jobs | 5 (configurable) |
+| Retry backoff formula | `30s × attempt_number` |
+| Job storage | Persistent (survives restarts) |
 
 ---
 
 ## 🗺️ Roadmap
 
-- [x] ML Lead Scoring Engine
-- [x] AI Proposal Generation
-- [x] FastAPI Backend + REST API
-- [x] Streamlit Analytics Dashboard
-- [x] LangGraph Workflow Orchestration
-- [x] WebSocket Real-time Streaming
-- [x] Whisper Voice Transcription
-- [x] FAISS RAG Pipeline
-- [ ] HubSpot / Salesforce CRM Integration
-- [ ] Docker Containerization
-- [ ] Multi-tenant Role-based Access Control
-- [ ] Email automation via SendGrid
+- [x] PostgreSQL-backed persistent job queue
+- [x] 5 concurrent goroutine workers
+- [x] Priority scheduling (1–3)
+- [x] Exponential backoff retry
+- [x] Dead letter queue
+- [x] REST API (enqueue, list, get, stats)
+- [x] CORS support
+- [x] Docker + docker-compose
+- [x] Deployed on Render
+- [x] Live React dashboard
+- [ ] Redis backend option
+- [ ] Job scheduling (cron-style)
+- [ ] Webhook callbacks on completion
+- [ ] Prometheus metrics endpoint
 
 ---
 
@@ -383,20 +364,15 @@ GET /health
 
 **Debasmita Chatterjee**
 
-AI/ML Engineer • LLM Systems • Generative AI • Automation
+Backend Engineer · Go · Python · ML Systems · Cloud Deployment
 
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0077B5?style=flat-square&logo=linkedin)](https://www.linkedin.com/in/debasmita-chatterjee/)
 [![GitHub](https://img.shields.io/badge/GitHub-Follow-181717?style=flat-square&logo=github)](https://github.com/debasmita30)
-[![Portfolio](https://img.shields.io/badge/Portfolio-Visit-FF6B6B?style=flat-square)](https://leafy-cajeta-9270ea.netlify.app/)
+[![Portfolio](https://img.shields.io/badge/Portfolio-Visit-00FF88?style=flat-square)](https://leafy-cajeta-9270ea.netlify.app/)
 
 </div>
 
 ---
-
-
-
-
-
 
 ## 📄 License
 
@@ -408,6 +384,6 @@ This project is licensed under the MIT License.
 
 ⭐ **If this project helped you, give it a star!**
 
-Built with 🤖 ML + ⚡ FastAPI + 🎙️ Whisper + 🔗 LangGraph
+Built with ⚙️ Go · 🐘 PostgreSQL · 🐳 Docker · ☁️ Render
 
 </div>
