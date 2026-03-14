@@ -54,7 +54,7 @@ def check_whisper():
     except Exception:
         return False
 
-# ---- ADDED: Whisper transcription call ----
+
 def transcribe_audio_api(audio_file) -> tuple:
     """Send audio file to Whisper transcription endpoint"""
     try:
@@ -240,7 +240,7 @@ if "name" not in st.session_state:
     st.session_state.ai_interest = 0
     st.session_state.description = ""
 
-# ---- ADDED: transcribed_text session state ----
+
 if "transcribed_text" not in st.session_state:
     st.session_state.transcribed_text = ""
 
@@ -599,7 +599,6 @@ if st.button("⚡ Analyze Lead"):
     r3.metric("Projected Revenue", f"${predicted_revenue:,}")
     r4.metric("Growth Rate", f"{growth_rate}%", delta=f"+{growth_rate}%")
 
-    # --- UPGRADED: Revenue Projection Chart ---
     quarters = ["Q1", "Q2", "Q3", "Q4"]
     base_rev = predicted_revenue / 4
     quarterly_rev = [round(base_rev * (1 + growth_rate / 100) ** i, 2) for i in range(4)]
