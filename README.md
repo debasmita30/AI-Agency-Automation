@@ -373,7 +373,8 @@ GET /health
 <img width="1915" height="870" alt="Image" src="https://github.com/user-attachments/assets/ea285f26-96a9-4331-8b48-9702c761e0e9" />
 &nbsp;
 <br><br>
-> **Revenue Forecast**
+
+Revenue Forecast 
 
 <img width="1917" height="808" alt="Image" src="https://github.com/user-attachments/assets/0fbbf736-3ff0-4a31-86aa-e133d2355fd5" />
 
