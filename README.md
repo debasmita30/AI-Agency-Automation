@@ -328,6 +328,8 @@ GET /health
 
 
 
+<img width="1918" height="757" alt="Image" src="https://github.com/user-attachments/assets/97386f14-3f78-47e9-ab49-6df4c89eb9d8" />
+
 > **Analytics Overview**
 
 
