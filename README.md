@@ -20,7 +20,9 @@
 
 <br/>
 
-🌐 **[Live Dashboard](https://ai-agency-automation-h.streamlit.app/)** &nbsp;|&nbsp; ⚡ **[Backend API](https://ai-agency-automation.onrender.com)** &nbsp;|&nbsp; 📖 **[API Docs](https://ai-agency-automation.onrender.com/docs)**
+🌐 **[Live Dashboard](https://ai-agency-automation-h.streamlit.app/)** &nbsp;|&nbsp; ⚡ **[Backend API](https://ai-agency-automation.onrender.com)** &nbsp;|&nbsp; 📖 **[API Docs](https://ai-agency-automation.onrender.com/docs)** &nbsp;|&nbsp; 🔴 **[API Health](https://ai-agency-automation.onrender.com/health)**
+
+> **Note:** Hosted on Render free tier — if backend shows offline, open the [health check](https://ai-agency-automation.onrender.com/health) link first and wait 30–60 seconds for it to wake up, then refresh the dashboard.
 
 </div>
 
