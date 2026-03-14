@@ -24,6 +24,10 @@
 
 > **Note:** Hosted on Render free tier — if backend shows offline, open the [health check](https://ai-agency-automation.onrender.com/health) link first and wait 30–60 seconds for it to wake up, then refresh the dashboard.
 
+---
+
+**Jump to:** [✨ Key Features](#-key-features) &nbsp;|&nbsp; [🏗️ System Architecture](#️-system-architecture) &nbsp;|&nbsp; [📂 Project Structure](#-project-structure) &nbsp;|&nbsp; [🛠️ Tech Stack](#️-tech-stack) &nbsp;|&nbsp; [📡 API Reference](#-api-reference) &nbsp;|&nbsp; [📊 Screenshots](#-dashboard-screenshots)
+
 </div>
 
 ---
