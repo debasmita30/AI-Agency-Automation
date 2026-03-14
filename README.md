@@ -329,31 +329,55 @@ GET /health
 
 
 <img width="1918" height="757" alt="Image" src="https://github.com/user-attachments/assets/97386f14-3f78-47e9-ab49-6df4c89eb9d8" />
+ <br><br>
+
 
 > **Analytics Overview**
+<img width="1918" height="860" alt="Image" src="https://github.com/user-attachments/assets/e021ac8e-7734-4358-85f1-c1a6aa45b65c" />
+<img width="1918" height="687" alt="Image" src="https://github.com/user-attachments/assets/06539b85-c27d-4974-bcb1-51276c4aa9d0" />
 
+
+<img width="1918" height="648" alt="Image" src="https://github.com/user-attachments/assets/1abb8d98-728e-4973-86cb-f821777952c4" />
+
+<img width="1917" height="833" alt="Image" src="https://github.com/user-attachments/assets/314059e6-7527-473e-96a8-df3cb4d255d4" />
+
+<img width="1917" height="542" alt="Image" src="https://github.com/user-attachments/assets/4941a9bf-fb80-4861-96ac-dee6ee8bfd3d" />
+
+<img width="1917" height="837" alt="Image" src="https://github.com/user-attachments/assets/c0f79a9f-537e-4875-91f4-06014bae971d" />
+
+<img width="1917" height="856" alt="Image" src="https://github.com/user-attachments/assets/64023baf-a64c-40dc-aaa2-0b2615132091" />
+<img width="1915" height="766" alt="Image" src="https://github.com/user-attachments/assets/701245bb-bfd9-4a8e-af46-f82360f47f7e" />
+
+<img width="1916" height="513" alt="Image" src="https://github.com/user-attachments/assets/c90deb1b-7399-4866-8e90-1d97e50e50e3" />
 
 &nbsp;
+<br><br>
 
 > **Lead Scoring + Model Radar**
 
-<!-- Add screenshot here -->
+
+<img width="1912" height="852" alt="Image" src="https://github.com/user-attachments/assets/ed054c6c-3965-4c51-ac9a-112a543a5edc" />
 &nbsp;
+<br><br>
 
 > **Workflow Pipeline**
 
-<!-- Add screenshot here -->
+
+<img width="1918" height="353" alt="Image" src="https://github.com/user-attachments/assets/a69f1de0-3ddb-4356-9dfe-18b07bb6896c" />
+
 &nbsp;
+<br><br>
 
 > **Voice Input (Whisper)**
 
-<!-- Add screenshot here -->
+<img width="1915" height="870" alt="Image" src="https://github.com/user-attachments/assets/ea285f26-96a9-4331-8b48-9702c761e0e9" />
 &nbsp;
-
+<br><br>
 > **Revenue Forecast**
 
-<!-- Add screenshot here -->
+<img width="1917" height="808" alt="Image" src="https://github.com/user-attachments/assets/0fbbf736-3ff0-4a31-86aa-e133d2355fd5" />
 
+<br><br>
 ---
 
 ## 📈 Performance
