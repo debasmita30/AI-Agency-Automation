@@ -43,7 +43,7 @@ def check_backend():
     except Exception:
         return False, "N/A"
 
-# ---- ADDED: Whisper status check ----
+
 def check_whisper():
     """Check if Whisper transcription is available"""
     try:
@@ -128,6 +128,10 @@ st.markdown("""
     .stMetric [data-testid="stMetricValue"] {
         color: #00d4ff !important;
         font-weight: 700 !important;
+        font-size: 0.95rem !important;
+        white-space: nowrap !important;
+        overflow: visible !important;
+        text-overflow: unset !important;
     }
     div[data-testid="stHorizontalBlock"] > div {
         padding: 4px;
