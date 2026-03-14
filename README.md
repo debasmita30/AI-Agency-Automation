@@ -26,10 +26,6 @@
 
 ---
 
-[🏗️ Architecture](#️-architecture) &nbsp;|&nbsp; [📁 Project Structure](#-project-structure) &nbsp;|&nbsp; [🛠️ Tech Stack](#️-tech-stack) &nbsp;|&nbsp; [🚀 API Reference](#-api-reference) &nbsp;|&nbsp; [📸 Screenshots](#-screenshots)
-
----
-
 [✨ Key Features](#-key-features) &nbsp;|&nbsp; [🏗️ System Architecture](#️-system-architecture) &nbsp;|&nbsp; [📂 Project Structure](#-project-structure) &nbsp;|&nbsp; [🛠️ Tech Stack](#️-tech-stack) &nbsp;|&nbsp; [📡 API Reference](#-api-reference) &nbsp;|&nbsp; [📊 Screenshots](#-dashboard-screenshots)
 
 </div>
